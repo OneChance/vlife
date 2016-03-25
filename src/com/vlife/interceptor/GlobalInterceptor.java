@@ -39,31 +39,23 @@ public class GlobalInterceptor implements HandlerInterceptor {
 
 		Locale locale = LocaleContextHolder.getLocale();
 
-		if (local == null || local.equals("")) {
-			request.getSession()
-					.setAttribute(
-							SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME,
-							locale);
-		} else {
-
+		if (local != null && !local.equals("")) {
 			if (local.equals("zh")) {
 				locale = new Locale("zh", "CN");
 			} else if (local.equals("en")) {
 				locale = new Locale("en", "US");
 			}
-
-			request.getSession()
-					.setAttribute(
-							SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME,
-							locale);
 		}
+
+		request.getSession().setAttribute(
+				SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
 		Account account = (Account) request.getSession().getAttribute(
 				"loginAccount");
 
 		if (null == account) {
 
-			String userid = WebUtil.getCookies(request, "loginuid");
+			String userid = WebUtil.getCookies(request, "vlife_loginuid");
 
 			if (null != userid && !userid.equals("") && !userid.equals("-1")) {
 
