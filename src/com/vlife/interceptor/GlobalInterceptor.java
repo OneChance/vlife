@@ -1,6 +1,8 @@
 package com.vlife.interceptor;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,8 @@ import com.vlife.tool.JsonTool;
 import com.vlife.tool.WebUtil;
 
 public class GlobalInterceptor implements HandlerInterceptor {
+
+	public static final String ENVIRONMENT_REQUEST_NAME = "env";
 
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handlerMethod)
@@ -90,6 +94,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 				}
 			}
 		}
+
+		this.configSystemEnvironment(request);
 	}
 
 	/**
@@ -121,6 +127,13 @@ public class GlobalInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		return false;
+	}
+
+	public void configSystemEnvironment(HttpServletRequest request) {
+		Map<String, Object> env = new HashMap<String, Object>();
+		String resourcesUrl = request.getRequestURI() + "resources";
+		env.put("resourcesUrl", resourcesUrl);
+		request.setAttribute(ENVIRONMENT_REQUEST_NAME, env);
 	}
 
 	@Resource
