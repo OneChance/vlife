@@ -25,6 +25,9 @@
 	href="${env.resourcesUrl}/font-awesome-4.1.0/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
 
+<link href="${env.resourcesUrl}/icheck/skins/square/blue.css?v=1.0.2"
+	rel="stylesheet">
+
 </head>
 
 <body id="page-top" class="index">
@@ -63,13 +66,13 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
-					<p class="page-scroll"><a href="#contact"><img class="img-responsive"
-						src="${env.resourcesUrl}/img/profile.png" alt=""></a></p>
+					<p class="page-scroll">
+						<a href="#contact"><img class="img-responsive"
+							src="${env.resourcesUrl}/img/profile.png" alt=""></a>
+					</p>
 					<div class="intro-text">
-						<span class="name"> 
-							<c:if test="${not empty loginAccount}">
-							</c:if> 
-							<c:if test="${empty loginAccount}">
+						<span class="name"> <c:if test="${not empty loginAccount}">
+							</c:if> <c:if test="${empty loginAccount}">
 								<spring:message code="nolife" />
 							</c:if>
 						</span>
@@ -169,62 +172,71 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h2><spring:message code="newlife"/></h2>
+					<h2>
+						<spring:message code="newlife" />
+					</h2>
 					<hr class="star-primary">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-8 col-lg-offset-2">
-					<!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
-					<!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-					<form name="sentMessage" id="contactForm" novalidate>
+					<form id="accountForm" novalidate>
+
+						<div style="text-align:center;">
+							<input tabindex="3" type="radio" id="login" name="entertype">
+							<label for="login" class="radio-label"><spring:message
+									code='lifegoon' /></label>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input tabindex="3" type="radio" id="reg" name="entertype">
+							<label for="reg" class="radio-label"><spring:message
+									code='anotherlife' /></label>
+						</div>
+
+
 						<div class="row control-group">
 							<div
 								class="form-group col-xs-12 floating-label-form-group controls">
-								<label> Name </label> <input type="text" class="form-control"
-									placeholder="Name" id="name" required
-									data-validation-required-message="Please enter your name.">
+								<label> <spring:message code='name' />
+								</label>
+								<input type="text" class="form-control"
+									placeholder="<spring:message code='name' />" id="name" required
+									data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='name' />">
 								<p class="help-block text-danger"></p>
 							</div>
 						</div>
 						<div class="row control-group">
 							<div
 								class="form-group col-xs-12 floating-label-form-group controls">
-								<label> Email Address </label> <input type="email"
-									class="form-control" placeholder="Email Address" id="email"
+								<label> <spring:message code='password' />
+								</label>
+								<input type="password" class="form-control"
+									placeholder="<spring:message code='password' />" id="password"
 									required
-									data-validation-required-message="Please enter your email address.">
+									data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='password' />">
 								<p class="help-block text-danger"></p>
 							</div>
 						</div>
-						<div class="row control-group">
-							<div
-								class="form-group col-xs-12 floating-label-form-group controls">
-								<label> Phone Number </label> <input type="tel"
-									class="form-control" placeholder="Phone Number" id="phone"
-									required
-									data-validation-required-message="Please enter your phone number.">
-								<p class="help-block text-danger"></p>
-							</div>
+
+						<div id="input-area" style="display: none">
+							<label class="checkbox-inline"> <input type="radio"
+									name="sex" id="sexm" value="option1" checked> <spring:message
+									code='sexm' />
+							</label> <label class="checkbox-inline"> <input type="radio"
+									name="sex" id="sexw" value="option2"> <spring:message
+									code='sexw' />
+							</label>
 						</div>
-						<div class="row control-group">
-							<div
-								class="form-group col-xs-12 floating-label-form-group controls">
-								<label> Message </label>
-								<textarea rows="5" class="form-control" placeholder="Message"
-									id="message" required
-									data-validation-required-message="Please enter a message."></textarea>
-								<p class="help-block text-danger"></p>
-							</div>
-						</div>
+
 						<br>
 						<div id="success"></div>
 						<div class="row">
 							<div class="form-group col-xs-12">
 								<button type="submit" class="btn btn-success btn-lg">
-									Send</button>
+									<spring:message code='enterlife' />
+								</button>
 							</div>
 						</div>
+
 					</form>
 				</div>
 			</div>
@@ -237,9 +249,8 @@
 		<div class="footer-below">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-12">
-						Copyright &copy; 2014.Company name All rights reserved.
-					</div>
+					<div class="col-lg-12">Copyright &copy; 2014.Company name All
+						rights reserved.</div>
 				</div>
 			</div>
 		</div>
@@ -513,14 +524,26 @@
 
 	<!-- Contact Form JavaScript -->
 	<script src="${env.resourcesUrl}/js/jqBootstrapValidation.js"></script>
-	<script src="${env.resourcesUrl}/js/contact_me.js"></script>
 
 	<!-- Custom Theme JavaScript -->
 	<script src="${env.resourcesUrl}/js/freelancer.js"></script>
+
+	<script src="${env.resourcesUrl}/js/vlife.js"></script>
+
+	<script src="${env.resourcesUrl}/icheck/js/icheck.js?v=1.0.2"></script>
+
+	<script>
+		$(function() {
+			$('input').iCheck({
+				radioClass : 'iradio_square-blue'
+			});
+		})
+	</script>
 
 	<div style="display: none">
 		<script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540'
 			language='JavaScript' charset='gb2312'></script>
 	</div>
+
 </body>
 </html>

@@ -6,25 +6,24 @@ $(function() {
             // additional error messages or events
         },
         submitSuccess: function($form, event) {
+        	
+        	var url;
+        	
             event.preventDefault(); // prevent default submit behaviour
             // get values from FORM
             var name = $("input#name").val();
-            var email = $("input#email").val();
-            var phone = $("input#phone").val();
-            var message = $("textarea#message").val();
+            var password = $("input#password").val();
             var firstName = name; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
             if (firstName.indexOf(' ') >= 0) {
                 firstName = name.split(' ').slice(0, -1).join(' ');
             }
             $.ajax({
-                url: "././mail/contact_me.php",
+                url: url,
                 type: "POST",
                 data: {
                     name: name,
-                    phone: phone,
-                    email: email,
-                    message: message
+                    password: password
                 },
                 cache: false,
                 success: function() {
