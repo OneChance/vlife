@@ -67,3 +67,15 @@ $(function() {
 $('#name').focus(function() {
     $('#success').html('');
 });
+
+$('input').on('ifChecked', function(event){
+	  $(this).click();
+});
+
+$('[name=entertype]').on('ifChecked', function(event){
+	  if($(this).val()=='reg'){
+		  $('.for-reg').show();
+	  }else{
+		  $('.for-reg').hide();
+	  }
+});
