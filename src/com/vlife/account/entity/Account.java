@@ -14,8 +14,21 @@ public class Account {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String account;
 	private String name;
 	private String password;
+	private String sex;
+	private Integer specie;
+	private Integer soul;
+	private Integer addPow;
+	private Integer addDef;
+	private Integer addHp;
+	private Integer addDex;
+	private Integer addInt;
+	private Integer money;
+	private Integer house;
+	private Integer spouse;
+	private String friends;
 
 	public Long getId() {
 		return id;
@@ -39,6 +52,110 @@ public class Account {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public Integer getSpecie() {
+		return specie;
+	}
+
+	public void setSpecie(Integer specie) {
+		this.specie = specie;
+	}
+
+	public Integer getSoul() {
+		return soul;
+	}
+
+	public void setSoul(Integer soul) {
+		this.soul = soul;
+	}
+
+	public Integer getAddPow() {
+		return addPow;
+	}
+
+	public void setAddPow(Integer addPow) {
+		this.addPow = addPow;
+	}
+
+	public Integer getAddDef() {
+		return addDef;
+	}
+
+	public void setAddDef(Integer addDef) {
+		this.addDef = addDef;
+	}
+
+	public Integer getAddHp() {
+		return addHp;
+	}
+
+	public void setAddHp(Integer addHp) {
+		this.addHp = addHp;
+	}
+
+	public Integer getAddDex() {
+		return addDex;
+	}
+
+	public void setAddDex(Integer addDex) {
+		this.addDex = addDex;
+	}
+
+	public Integer getAddInt() {
+		return addInt;
+	}
+
+	public void setAddInt(Integer addInt) {
+		this.addInt = addInt;
+	}
+
+	public Integer getMoney() {
+		return money;
+	}
+
+	public void setMoney(Integer money) {
+		this.money = money;
+	}
+
+	public Integer getHouse() {
+		return house;
+	}
+
+	public void setHouse(Integer house) {
+		this.house = house;
+	}
+
+	public Integer getSpouse() {
+		return spouse;
+	}
+
+	public void setSpouse(Integer spouse) {
+		this.spouse = spouse;
+	}
+
+	public String getFriends() {
+		return friends;
+	}
+
+	public void setFriends(String friends) {
+		this.friends = friends;
 	}
 
 }

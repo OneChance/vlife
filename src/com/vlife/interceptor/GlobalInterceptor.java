@@ -31,38 +31,41 @@ public class GlobalInterceptor implements HandlerInterceptor {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		if (this.isResources(handlerMethod)) {
+		if (!this.isResources(handlerMethod)) {
 
-		}
+			String local = WebUtil.getCookies(request, "vlife_lan");
 
-		String local = WebUtil.getCookies(request, "vlife_lan");
+			Locale locale = LocaleContextHolder.getLocale();
 
-		Locale locale = LocaleContextHolder.getLocale();
-
-		if (local != null && !local.equals("")) {
-			if (local.equals("zh")) {
-				locale = new Locale("zh", "CN");
-			} else if (local.equals("en")) {
-				locale = new Locale("en", "US");
+			if (local != null && !local.equals("")) {
+				if (local.equals("zh")) {
+					locale = new Locale("zh", "CN");
+				} else if (local.equals("en")) {
+					locale = new Locale("en", "US");
+				}
 			}
-		}
 
-		request.getSession().setAttribute(
-				SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+			request.getSession()
+					.setAttribute(
+							SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME,
+							locale);
 
-		Account account = (Account) request.getSession().getAttribute(
-				"loginAccount");
+			Account account = (Account) request.getSession().getAttribute(
+					"loginAccount");
 
-		if (null == account) {
+			if (null == account) {
+				String userid = WebUtil.getCookies(request, "vlife_uinfo");
 
-			String userid = WebUtil.getCookies(request, "vlife_loginuid");
+				if (null != userid && !userid.equals("")
+						&& !userid.equals("-1")) {
+					account = accountService.getUser(userid);
+				}
+			}
 
-			if (null != userid && !userid.equals("") && !userid.equals("-1")) {
-
-				account = accountService.getUser(userid);
-
+			if (account != null) {
 				request.getSession().setAttribute("loginAccount", account);
 			}
+
 		}
 
 		return true;
@@ -80,9 +83,12 @@ public class GlobalInterceptor implements HandlerInterceptor {
 		if (!this.isResources(handlerMethod)) {
 			if (isJson(handlerMethod)) {
 				if (null != modelAndView && null != modelAndView.getViewName()) {
-					response.getWriter().write(modelAndView.getViewName());
-					response.getWriter().flush();
-					modelAndView.clear();
+					for (Object o : modelAndView.getModelMap().values()) {
+						if (o instanceof JsonTool) {
+							((JsonTool) o).write(response);
+							modelAndView.clear();
+						}
+					}
 				}
 			}
 		}
@@ -125,6 +131,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 		Map<String, Object> env = new HashMap<String, Object>();
 		String resourcesUrl = request.getRequestURI() + "resources";
 		env.put("resourcesUrl", resourcesUrl);
+		env.put("baseUrl", request.getRequestURI());
+
 		request.setAttribute(ENVIRONMENT_REQUEST_NAME, env);
 	}
 

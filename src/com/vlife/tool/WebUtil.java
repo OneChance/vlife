@@ -1,6 +1,5 @@
 package com.vlife.tool;
 
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
@@ -44,6 +43,7 @@ public class WebUtil {
 		value = URLEncoder.encode(value, "UTF-8");
 		Cookie cookie = new Cookie(key, value);
 		cookie.setPath("/");
+		cookie.setMaxAge(60 * 60 * 24 * 30);
 		response.addCookie(cookie);
 	}
 
@@ -93,7 +93,7 @@ public class WebUtil {
 		}
 		return key.toString();
 	}
-	
+
 	private final static String MAXTHON = "Maxthon";
 	private final static String QQ = "QQBrowser";
 	private final static String GREEN = "GreenBrowser";

@@ -1,4 +1,14 @@
 $(function() {
+	
+	$('#unsign').click(function(){		
+		UTIL.ajax.go(baseUrl+'unsign',"POST",null,function(res) {          	
+        	if(res.message){
+        		showMsg(res.message);
+        	}else{
+        		location = location;
+        	}
+        });
+	});
 
     $("input,textarea").jqBootstrapValidation({
         preventSubmit: true,
@@ -9,52 +19,41 @@ $(function() {
         	
         	var url;
         	
-            event.preventDefault(); // prevent default submit behaviour
-            // get values from FORM
-            var name = $("input#name").val();
+        	var entertype = $("[name=entertype]").filter(':checked').val();
+        	var account = $("input#account").val();
+        	var name = $("input#name").val();
             var password = $("input#password").val();
-            var firstName = name; // For Success/Failure Message
-            // Check for white space in name for Success/Fail message
-            if (firstName.indexOf(' ') >= 0) {
-                firstName = name.split(' ').slice(0, -1).join(' ');
-            }
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: {
-                    name: name,
-                    password: password
-                },
-                cache: false,
-                success: function() {
-                    // Success message
-                    $('#success').html("<div class='alert alert-success'>");
-                    $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-                        .append("</button>");
-                    $('#success > .alert-success')
-                        .append("<strong>Your message has been sent. </strong>");
-                    $('#success > .alert-success')
-                        .append('</div>');
+            var sex = $("[name=sex]").val();
 
-                    //clear all fields
-                    $('#contactForm').trigger("reset");
-                },
-                error: function() {
-                    // Fail message
-                    $('#success').html("<div class='alert alert-danger'>");
-                    $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-                        .append("</button>");
-                    $('#success > .alert-danger').append("<strong>Sorry " + firstName + ", it seems that my mail server is not responding. Please try again later!");
-                    $('#success > .alert-danger').append('</div>');
-                    //clear all fields
-                    $('#contactForm').trigger("reset");
-                },
-            })
+        	data = {
+        			account:account,
+        			name: name,
+                    password: password
+            }
+        	
+        	if(entertype == 'login'){
+        		url = baseUrl+'login';     		
+        	}else{
+        		url = baseUrl+'reg';    		
+        		data.sex = sex;
+        	}
+        	
+            event.preventDefault(); // prevent default submit behaviour
+            
+            UTIL.ajax.go(url,"POST",data,function(res) {          	
+            	if(res.message){
+            		showMsg(res.message);
+            	}else{          		
+            		location = location;            		 
+            	}
+            });
         },
         filter: function() {
             return $(this).is(":visible");
         },
     });
+    
+    
 
     $("a[data-toggle=\"tab\"]").click(function(e) {
         e.preventDefault();
@@ -62,8 +61,17 @@ $(function() {
     });
 });
 
+function showMsg(msg){	
+	$('#success').fadeIn('slow',function(){
+		setTimeout(function () { 
+			if($('#success').is(':visible')){
+				$('#success').fadeOut();
+			}	
+	    }, 1000);
+	}).find("strong").html(msg); 
+}
 
-/*When clicking on Full hide fail/success boxes */
+/* When clicking on Full hide fail/success boxes */
 $('#name').focus(function() {
     $('#success').html('');
 });

@@ -12,8 +12,8 @@ public class AccountService extends DatabaseService {
 
 	public String accountInputCheck(Account account) {
 
-		if (account.getName() == null || account.getName().equals("")) {
-			return "namenull";
+		if (account.getAccount() == null || account.getAccount().equals("")) {
+			return "accountnull";
 		}
 		if (account.getPassword() == null || account.getPassword().equals("")) {
 			return "passwordnull";
@@ -31,8 +31,8 @@ public class AccountService extends DatabaseService {
 		}
 
 		Account accountDb = this.get(Account.class,
-				"select * from account where user_name=?",
-				new String[] { account.getName() });
+				"select * from account where account=?",
+				new String[] { account.getAccount() });
 
 		if (accountDb != null) {
 			return "accountexist";
@@ -40,7 +40,7 @@ public class AccountService extends DatabaseService {
 			this.save(account);
 		}
 
-		return "regok";
+		return "";
 	}
 
 	public String checkLogin(Account account) throws Exception {
@@ -52,16 +52,16 @@ public class AccountService extends DatabaseService {
 		}
 
 		Account user_db = this.get(Account.class,
-				"select * from account where user_name=? and password=?",
-				new String[] { account.getName(), account.getPassword() });
+				"select * from account where account=? and password=?",
+				new String[] { account.getAccount(), account.getPassword() });
 
 		if (user_db == null) {
-			return "loginerror";
+			return "accounterror";
 		} else {
 			account.setId(user_db.getId());
 		}
 
-		return "loginok";
+		return "";
 	}
 
 	public Account getUser(String userid) throws NumberFormatException,

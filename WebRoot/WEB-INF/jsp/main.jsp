@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
@@ -29,6 +30,10 @@
 		<link href="${env.resourcesUrl}/icheck/skins/square/blue.css?v=1.0.2"
 			rel="stylesheet">
 
+		<script>
+	var server_error_msg = '<spring:message code='servererror' />';
+	var baseUrl = '${env.baseUrl}'
+</script>
 	</head>
 
 	<body id="page-top" class="index">
@@ -45,7 +50,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#page-top"><spring:message
+					<a class="navbar-brand" href="#page-top" id="pagetop"><spring:message
 							code="brand" /> </a>
 				</div>
 
@@ -59,6 +64,14 @@
 						<li class="page-scroll">
 							<a href="#portfolio"><spring:message code="info" /> </a>
 						</li>
+
+						<c:if test="${not empty loginAccount}">
+							<li>
+								<a id="unsign" style="cursor: pointer;"><spring:message
+										code="unsign" /> </a>
+							</li>
+						</c:if>
+
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -166,101 +179,120 @@
 		</section>
 
 		<!-- Contact Section -->
-		<section id="contact">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 text-center">
-						<h2>
-							<spring:message code="newlife" />
-						</h2>
-						<hr class="star-primary">
+		<c:if test="${empty loginAccount}">
+			<section id="contact">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<h2>
+								<spring:message code="newlife" />
+							</h2>
+							<hr class="star-primary">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8 col-lg-offset-2">
+							<form id="accountForm" novalidate>
+
+								<div class="row control-group">
+									<div class="col-xs-12 controls">
+										<div style="margin-bottom: 10px;">
+											<input type="radio" id="login" name="entertype" required
+												value="login"
+												data-validation-required-message="<spring:message code='pleasechoose' /><spring:message code='retype' />">
+											<label for="login" class="radio-label">
+												<spring:message code='lifegoon' />
+											</label>
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="reg" name="entertype" value="reg">
+											<label for="reg" class="radio-label">
+												<spring:message code='anotherlife' />
+											</label>
+										</div>
+										<p class="help-block text-danger"></p>
+									</div>
+								</div>
+
+								<div class="row control-group">
+									<div
+										class="form-group col-xs-12 floating-label-form-group controls">
+										<label>
+											<spring:message code='account' />
+										</label>
+										<input type="text" class="form-control"
+											placeholder="<spring:message code='account' />" id="account"
+											required
+											data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='account' />">
+										<p class="help-block text-danger"></p>
+									</div>
+								</div>
+
+								<div class="row control-group for-reg">
+									<div
+										class="form-group col-xs-12 floating-label-form-group controls">
+										<label>
+											<spring:message code='name' />
+										</label>
+										<input type="text" class="form-control"
+											placeholder="<spring:message code='name' />" id="name"
+											required
+											data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='name' />">
+										<p class="help-block text-danger"></p>
+									</div>
+								</div>
+
+								<div class="row control-group">
+									<div
+										class="form-group col-xs-12 floating-label-form-group controls">
+										<label>
+											<spring:message code='password' />
+										</label>
+										<input type="password" class="form-control"
+											placeholder="<spring:message code='password' />"
+											id="password" required
+											data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='password' />">
+										<p class="help-block text-danger"></p>
+									</div>
+								</div>
+
+								<div class="row control-group for-reg">
+									<div class="col-xs-12 controls">
+										<div style="margin-top: 30px; margin-bottom: 20px;">
+											<input type="radio" id="sexm" name="sex" required value="m"
+												data-validation-required-message="<spring:message code='pleasechoose' /><spring:message code='sex' />">
+											<label for="sexm" class="radio-label">
+												<spring:message code='sexm' />
+											</label>
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="sexf" name="sex" value="f">
+											<label for="sexf" class="radio-label">
+												<spring:message code='sexf' />
+											</label>
+										</div>
+										<p class="help-block text-danger"></p>
+									</div>
+								</div>
+
+								<br>
+								<div id="success" style="display: none">
+									<div class="alert alert-danger">
+										<strong></strong>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-xs-12">
+										<button type="submit" class="btn btn-success btn-lg">
+											<spring:message code='enterlife' />
+										</button>
+									</div>
+								</div>
+
+							</form>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-8 col-lg-offset-2">
-						<form id="accountForm" novalidate>
-
-							<div class="row control-group">
-								<div class="col-xs-12 controls">
-									<div style="margin-bottom:10px;">
-										<input type="radio" id="login" name="entertype" required
-											value="login"
-											data-validation-required-message="<spring:message code='pleasechoose' /><spring:message code='retype' />">
-										<label for="login" class="radio-label">
-											<spring:message code='lifegoon' />
-										</label>
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										<input type="radio" id="reg" name="entertype" value="reg">
-										<label for="reg" class="radio-label">
-											<spring:message code='anotherlife' />
-										</label>
-									</div>
-									<p class="help-block text-danger"></p>
-								</div>
-							</div>
-
-
-							<div class="row control-group">
-								<div
-									class="form-group col-xs-12 floating-label-form-group controls">
-									<label>
-										<spring:message code='name' />
-									</label>
-									<input type="text" class="form-control"
-										placeholder="<spring:message code='name' />" id="name"
-										required
-										data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='name' />">
-									<p class="help-block text-danger"></p>
-								</div>
-							</div>
-
-							<div class="row control-group">
-								<div
-									class="form-group col-xs-12 floating-label-form-group controls">
-									<label>
-										<spring:message code='password' />
-									</label>
-									<input type="password" class="form-control"
-										placeholder="<spring:message code='password' />" id="password"
-										required
-										data-validation-required-message="<spring:message code='pleaseinput' /><spring:message code='password' />">
-									<p class="help-block text-danger"></p>
-								</div>
-							</div>
-
-							<div class="row control-group for-reg">
-								<div class="col-xs-12 controls">
-									<div style="margin-top:30px;margin-bottom:20px;">
-										<input type="radio" id="sexm" name="sex" required value="m"
-											data-validation-required-message="<spring:message code='pleasechoose' /><spring:message code='sex' />">
-										<label for="sexm" class="radio-label">
-											<spring:message code='sexm' />
-										</label>
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										<input type="radio" id="sexf" name="sex" value="f">
-										<label for="sexf" class="radio-label">
-											<spring:message code='sexf' />
-										</label>
-									</div>
-									<p class="help-block text-danger"></p>
-								</div>
-							</div>
-
-							<br>
-							<div id="success"></div>
-							<div class="row">
-								<div class="form-group col-xs-12">
-									<button type="submit" class="btn btn-success btn-lg">
-										<spring:message code='enterlife' />
-									</button>
-								</div>
-							</div>
-
-						</form>
-					</div>
-				</div>
-			</div>
-		</section>
+			</section>
+		</c:if>
 
 		<!-- Footer -->
 		<footer class="text-center">
@@ -607,10 +639,6 @@
 		<!-- Custom Theme JavaScript -->
 		<script src="${env.resourcesUrl}/js/freelancer.js"></script>
 
-		<script src="${env.resourcesUrl}/js/vlife.js"></script>
-
-		<script src="${env.resourcesUrl}/icheck/js/icheck.js?v=1.0.2"></script>
-
 		<script>
 	$(function() {
 		$('input').iCheck({
@@ -618,6 +646,12 @@
 		});
 	})
 </script>
+		<script src="${env.resourcesUrl}/js/zhstar-module.js"></script>
+
+		<script src="${env.resourcesUrl}/js/vlife.js"></script>
+
+		<script src="${env.resourcesUrl}/icheck/js/icheck.js?v=1.0.2"></script>
+
 
 		<div style="display: none">
 			<script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540'
