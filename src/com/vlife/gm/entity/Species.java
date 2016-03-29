@@ -109,5 +109,4 @@ public class Species {
 	public void setRatioEnd(Integer ratioEnd) {
 		this.ratioEnd = ratioEnd;
 	}
-
 }

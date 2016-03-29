@@ -86,7 +86,7 @@
 					<div class="col-lg-12">
 						<p class="page-scroll">
 							<a href="#contact"><img class="img-responsive"
-									src="${env.resourcesUrl}/img/profile.png" alt=""> </a>
+									src="${env.resourcesUrl}/img/${not empty loginAccount?loginAccount.profileImg:'profile.png'}" alt=""> </a>
 						</p>
 						<div class="intro-text">
 							<span class="name"> <c:if test="${not empty loginAccount}">

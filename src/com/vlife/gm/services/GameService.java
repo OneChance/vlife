@@ -4,7 +4,9 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
+import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
+import com.vlife.gm.entity.Species;
 
 @Service
 public class GameService extends DatabaseService {
@@ -26,5 +28,11 @@ public class GameService extends DatabaseService {
 		String sql = "select id from vlife.species where ratioStart<"
 				+ randomValue + " and ratioEnd>" + randomValue;
 		return this.getJdbcTemplate().queryForObject(sql, Integer.class);
+	}
+
+	public void setProfileImg(Account account, Integer level) throws Exception {
+		Integer specie = account.getSpecie();
+		Species species = this.get(Species.class, specie.longValue());
+		account.setProfileImg(species.getName() + "/" + level + ".png");
 	}
 }

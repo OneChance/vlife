@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vlife.account.entity.Account;
 import com.vlife.account.service.AccountService;
-import com.vlife.gm.services.GameService;
 import com.vlife.tool.JsonTool;
 import com.vlife.tool.Message;
 import com.vlife.tool.WebUtil;
@@ -53,6 +52,7 @@ public class GameController {
 		if (!resCode.equals("")) {
 			jt.setMessage(Message.getMessage(request, resCode));
 		} else {
+			accountService.saveAccount(account);
 			EnterGame(request, response, account);
 		}
 
@@ -79,6 +79,4 @@ public class GameController {
 
 	@Resource
 	private AccountService accountService;
-	@Resource
-	private GameService gameService;
 }

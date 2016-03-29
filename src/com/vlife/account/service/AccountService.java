@@ -1,11 +1,13 @@
 package com.vlife.account.service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
+import com.vlife.gm.services.GameService;
 
 @Service
 public class AccountService extends DatabaseService {
@@ -36,11 +38,17 @@ public class AccountService extends DatabaseService {
 
 		if (accountDb != null) {
 			return "accountexist";
-		} else {
-			this.save(account);
 		}
 
 		return "";
+	}
+
+	public void saveAccount(Account account) throws Exception {
+
+		account.setSpecie(gameService.reincarnation(account.getSoul()));
+		gameService.setProfileImg(account, 0);
+
+		this.save(account);
 	}
 
 	public String checkLogin(Account account) throws Exception {
@@ -75,4 +83,7 @@ public class AccountService extends DatabaseService {
 		Account account = (Account) request.getSession().getAttribute("loginu");
 		return account;
 	}
+
+	@Resource
+	private GameService gameService;
 }

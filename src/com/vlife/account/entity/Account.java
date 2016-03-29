@@ -29,6 +29,20 @@ public class Account {
 	private Integer house;
 	private Integer spouse;
 	private String friends;
+	private String profileImg;
+
+	public Account() {
+		this.specie = 0;
+		this.soul = 0;
+		this.addPow = 0;
+		this.addDef = 0;
+		this.addHp = 0;
+		this.addDex = 0;
+		this.addInt = 0;
+		this.money = 0;
+		this.house = 0;
+		this.spouse = 0;
+	}
 
 	public Long getId() {
 		return id;
@@ -156,6 +170,14 @@ public class Account {
 
 	public void setFriends(String friends) {
 		this.friends = friends;
+	}
+
+	public String getProfileImg() {
+		return profileImg;
+	}
+
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 
 }
