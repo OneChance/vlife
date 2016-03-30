@@ -54,11 +54,11 @@ public class GlobalInterceptor implements HandlerInterceptor {
 					"loginAccount");
 
 			if (null == account) {
-				String userid = WebUtil.getCookies(request, "vlife_uinfo");
 
-				if (null != userid && !userid.equals("")
-						&& !userid.equals("-1")) {
-					account = accountService.getUser(userid);
+				String id = WebUtil.getCookies(request, "vlife_uinfo");
+
+				if (null != id && !id.equals("")) {
+					account = accountService.getAccount(id);
 				}
 			}
 
@@ -129,9 +129,10 @@ public class GlobalInterceptor implements HandlerInterceptor {
 
 	public void configSystemEnvironment(HttpServletRequest request) {
 		Map<String, Object> env = new HashMap<String, Object>();
-		String resourcesUrl = request.getRequestURI() + "resources";
+
+		String resourcesUrl = request.getContextPath() + "/resources";
 		env.put("resourcesUrl", resourcesUrl);
-		env.put("baseUrl", request.getRequestURI());
+		env.put("baseUrl", request.getContextPath() + "/");
 
 		request.setAttribute(ENVIRONMENT_REQUEST_NAME, env);
 	}

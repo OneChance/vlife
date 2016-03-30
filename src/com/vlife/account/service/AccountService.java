@@ -24,12 +24,13 @@ public class AccountService extends DatabaseService {
 		return "";
 	}
 
-	public String checkAccount(Account account) throws Exception {
+	public Account checkAccount(Account account) throws Exception {
 
 		String inputRes = accountInputCheck(account);
 
 		if (!inputRes.equals("")) {
-			return inputRes;
+			account.setCheckMsg(inputRes);
+			return null;
 		}
 
 		Account accountDb = this.get(Account.class,
@@ -37,50 +38,51 @@ public class AccountService extends DatabaseService {
 				new String[] { account.getAccount() });
 
 		if (accountDb != null) {
-			return "accountexist";
+			account.setCheckMsg("accountexist");
+			return null;
 		}
 
-		return "";
+		return account;
 	}
 
 	public void saveAccount(Account account) throws Exception {
 
-		account.setSpecie(gameService.reincarnation(account.getSoul()));
-		gameService.setProfileImg(account, 0);
+		gameService.initAccount(account);
 
 		this.save(account);
 	}
 
-	public String checkLogin(Account account) throws Exception {
+	public Account checkLogin(Account account) throws Exception {
 
 		String inputRes = accountInputCheck(account);
 
 		if (!inputRes.equals("")) {
-			return inputRes;
+			account.setCheckMsg(inputRes);
+			return null;
 		}
 
-		Account user_db = this.get(Account.class,
+		Account account_db = this.get(Account.class,
 				"select * from account where account=? and password=?",
 				new String[] { account.getAccount(), account.getPassword() });
 
-		if (user_db == null) {
-			return "accounterror";
-		} else {
-			account.setId(user_db.getId());
+		if (account_db == null) {
+			account.setCheckMsg("accounterror");
+			return null;
 		}
 
-		return "";
+		return account_db;
 	}
 
-	public Account getUser(String userid) throws NumberFormatException,
+	public Account getAccount(String id) throws NumberFormatException,
 			Exception {
-		Account account = this.get(Account.class, Long.parseLong(userid));
+		Account account = this.get(Account.class, Long.parseLong(id));
 		return account;
 	}
 
-	public Account getLoginUser(HttpServletRequest request)
+	public Account getLoginAccount(HttpServletRequest request)
 			throws NumberFormatException, Exception {
-		Account account = (Account) request.getSession().getAttribute("loginu");
+		Account account = (Account) request.getSession().getAttribute(
+				"loginAccount");
 		return account;
 	}
 

@@ -1,10 +1,13 @@
 package com.vlife.account.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "account")
@@ -25,11 +28,12 @@ public class Account {
 	private Integer addHp;
 	private Integer addDex;
 	private Integer addInt;
-	private Integer money;
-	private Integer house;
-	private Integer spouse;
-	private String friends;
-	private String profileImg;
+	private Date reincarnateTime;
+	private Integer level;
+	private Integer exp;
+
+	@Transient
+	private String checkMsg;
 
 	public Account() {
 		this.specie = 0;
@@ -39,9 +43,8 @@ public class Account {
 		this.addHp = 0;
 		this.addDex = 0;
 		this.addInt = 0;
-		this.money = 0;
-		this.house = 0;
-		this.spouse = 0;
+		this.level = 0;
+		this.exp = 0;
 	}
 
 	public Long getId() {
@@ -140,44 +143,36 @@ public class Account {
 		this.addInt = addInt;
 	}
 
-	public Integer getMoney() {
-		return money;
+	public Date getReincarnateTime() {
+		return reincarnateTime;
 	}
 
-	public void setMoney(Integer money) {
-		this.money = money;
+	public void setReincarnateTime(Date reincarnateTime) {
+		this.reincarnateTime = reincarnateTime;
 	}
 
-	public Integer getHouse() {
-		return house;
+	public String getCheckMsg() {
+		return checkMsg;
 	}
 
-	public void setHouse(Integer house) {
-		this.house = house;
+	public void setCheckMsg(String checkMsg) {
+		this.checkMsg = checkMsg;
 	}
 
-	public Integer getSpouse() {
-		return spouse;
+	public Integer getLevel() {
+		return level;
 	}
 
-	public void setSpouse(Integer spouse) {
-		this.spouse = spouse;
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
-	public String getFriends() {
-		return friends;
+	public Integer getExp() {
+		return exp;
 	}
 
-	public void setFriends(String friends) {
-		this.friends = friends;
-	}
-
-	public String getProfileImg() {
-		return profileImg;
-	}
-
-	public void setProfileImg(String profileImg) {
-		this.profileImg = profileImg;
+	public void setExp(Integer exp) {
+		this.exp = exp;
 	}
 
 }

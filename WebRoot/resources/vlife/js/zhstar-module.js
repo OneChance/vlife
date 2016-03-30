@@ -15,7 +15,7 @@
             dataType:"json",
             success:success,
             error: function() {         	
-            	showMsg(server_error_msg);
+            	alert(server_error_msg);
             },
         });
 	}

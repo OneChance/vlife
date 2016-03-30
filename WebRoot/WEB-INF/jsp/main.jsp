@@ -16,23 +16,29 @@
 		<title>VLife</title>
 
 		<!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-		<link href="${env.resourcesUrl}/css/bootstrap.min.css"
+		<link href="${env.resourcesUrl}/vlife/css/bootstrap.min.css"
 			rel="stylesheet">
 
 		<!-- Custom CSS -->
-		<link href="${env.resourcesUrl}/css/freelancer.css" rel="stylesheet">
+		<link href="${env.resourcesUrl}/vlife/css/freelancer.css"
+			rel="stylesheet">
 
 		<!-- Custom Fonts -->
 		<link
-			href="${env.resourcesUrl}/font-awesome-4.1.0/css/font-awesome.min.css"
+			href="${env.resourcesUrl}/vlife/font-awesome-4.1.0/css/font-awesome.min.css"
 			rel="stylesheet" type="text/css">
 
 		<link href="${env.resourcesUrl}/icheck/skins/square/blue.css?v=1.0.2"
 			rel="stylesheet">
 
+		<!-- Countdown -->
+		<link rel="stylesheet"
+			href="${env.resourcesUrl}/countdown/css/style.css">
+
 		<script>
 	var server_error_msg = '<spring:message code='servererror' />';
 	var baseUrl = '${env.baseUrl}'
+	var remainTime = '${remainTime}';
 </script>
 	</head>
 
@@ -85,17 +91,59 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<p class="page-scroll">
-							<a href="#contact"><img class="img-responsive"
-									src="${env.resourcesUrl}/img/${not empty loginAccount?loginAccount.profileImg:'profile.png'}" alt=""> </a>
+							<c:if test="${not login}">
+								<a href="#contact">
+							</c:if>
+							<c:if test="${login}">
+								<a>
+							</c:if>
+							<img class="img-responsive"
+									src="${env.resourcesUrl}/vlife/img/${profile}" alt=""> </a>
 						</p>
 						<div class="intro-text">
-							<span class="name"> <c:if test="${not empty loginAccount}">
-								</c:if> <c:if test="${empty loginAccount}">
+							<span class="name"> <c:if test="${login}">
+									${loginAccount.name}&nbsp;<spring:message code="maintitle" />
+									<spring:message code="${species.name}" />
+								</c:if> <c:if test="${not login}">
 									<spring:message code="nolife" />
 								</c:if> </span>
 							<hr class="star-light">
-							<span class="skills">Web Developer - Graphic Artist - User
-								Experience Designer</span>
+							<span class="skills"> <c:if
+									test="${login}">
+									<div class="timer">
+										<div class="days-wrapper">
+											<span class="days"></span>
+											<br>
+											<spring:message code="day" />
+										</div>
+										<div class="hours-wrapper">
+											<span class="hours"></span>
+											<br>
+											<spring:message code="hour" />
+										</div>
+										<div class="minutes-wrapper">
+											<span class="minutes"></span>
+											<br>
+											<spring:message code="minute" />
+										</div>
+										<div class="seconds-wrapper">
+											<span class="seconds"></span>
+											<br>
+											<spring:message code="seconds" />
+										</div>
+									</div>
+
+									<div id="reincarnateButton" class="col-xs-12"
+										style="margin-top: 50px; display: none">
+										<a class="btn btn-primary btn-lg portfolio-link game-page"
+											url="reincarnateGuide" href="#reincarnateGuide"
+											data-toggle="modal"> <spring:message code='lifecomplete' />
+										</a>
+									</div>
+									
+								</c:if> <c:if test="${not login}">
+									<div class="title-pacehold"></div>
+								</c:if> </span>
 						</div>
 					</div>
 				</div>
@@ -121,7 +169,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/cabin.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/cabin.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
@@ -131,7 +179,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/cake.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/cake.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
@@ -141,7 +189,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/circus.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/circus.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
@@ -151,7 +199,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/game.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/game.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
@@ -161,7 +209,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/safe.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/safe.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
@@ -171,7 +219,7 @@
 								<div class="caption-content">
 									<i class="fa fa-search-plus fa-3x"></i>
 								</div>
-							</div> <img src="${env.resourcesUrl}/img/portfolio/submarine.png"
+							</div> <img src="${env.resourcesUrl}/vlife/img/portfolio/submarine.png"
 								class="img-responsive" alt=""> </a>
 					</div>
 				</div>
@@ -281,7 +329,8 @@
 								</div>
 								<div class="row">
 									<div class="form-group col-xs-12">
-										<button type="submit" class="btn btn-success btn-lg">
+										<button type="submit" class="btn btn-primary btn-lg">
+											<i class="fa fa-key"></i>
 											<spring:message code='enterlife' />
 										</button>
 									</div>
@@ -331,7 +380,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/cabin.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/cabin.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -382,7 +431,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/cake.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/cake.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -433,7 +482,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/circus.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/circus.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -484,7 +533,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/game.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/game.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -535,7 +584,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/safe.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/safe.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -586,7 +635,7 @@
 									Project Title
 								</h2>
 								<hr class="star-primary">
-								<img src="${env.resourcesUrl}/img/portfolio/submarine.png"
+								<img src="${env.resourcesUrl}/vlife/img/portfolio/submarine.png"
 									class="img-responsive img-centered" alt="">
 								<p>
 									Use this area of the page to describe your project. The icon
@@ -611,7 +660,7 @@
 												Development</a> </strong>
 									</li>
 								</ul>
-								<button type="button" class="btn btn-default"
+								<button type="button" class="btn btn-primary"
 									data-dismiss="modal">
 									<i class="fa fa-times"></i> Close
 								</button>
@@ -622,22 +671,28 @@
 			</div>
 		</div>
 
+		<!-- Portfolio Modals -->
+		<div class="portfolio-modal modal fade" id="reincarnateGuide"
+			tabindex="-1" role="dialog" aria-hidden="true">
+
+		</div>
+
 		<!-- jQuery Version 1.11.0 -->
-		<script src="${env.resourcesUrl}/js/jquery-1.11.0.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/jquery-1.11.0.js"></script>
 
 		<!-- Bootstrap Core JavaScript -->
-		<script src="${env.resourcesUrl}/js/bootstrap.min.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/bootstrap.min.js"></script>
 
 		<!-- Plugin JavaScript -->
-		<script src="${env.resourcesUrl}/js/jquery.easing.min.js"></script>
-		<script src="${env.resourcesUrl}/js/classie.js"></script>
-		<script src="${env.resourcesUrl}/js/cbpAnimatedHeader.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/jquery.easing.min.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/classie.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/cbpAnimatedHeader.js"></script>
 
 		<!-- Contact Form JavaScript -->
-		<script src="${env.resourcesUrl}/js/jqBootstrapValidation.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/jqBootstrapValidation.js"></script>
 
 		<!-- Custom Theme JavaScript -->
-		<script src="${env.resourcesUrl}/js/freelancer.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/freelancer.js"></script>
 
 		<script>
 	$(function() {
@@ -646,11 +701,13 @@
 		});
 	})
 </script>
-		<script src="${env.resourcesUrl}/js/zhstar-module.js"></script>
-
-		<script src="${env.resourcesUrl}/js/vlife.js"></script>
-
+		<script src="${env.resourcesUrl}/vlife/js/zhstar-module.js"></script>
+		<script src="${env.resourcesUrl}/vlife/js/vlife.js"></script>
 		<script src="${env.resourcesUrl}/icheck/js/icheck.js?v=1.0.2"></script>
+		<script
+			src="${env.resourcesUrl}/countdown/js/jquery.backstretch.min.js"></script>
+		<script src="${env.resourcesUrl}/countdown/js/jquery.countdown.js"></script>
+		<script src="${env.resourcesUrl}/countdown/js/scripts.js"></script>
 
 
 		<div style="display: none">

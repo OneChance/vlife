@@ -1,5 +1,11 @@
 $(function() {
 	
+	var VLIFE = {
+		game:{}
+	};
+	
+	window.VLIFE = VLIFE;
+	
 	$('#unsign').click(function(){		
 		UTIL.ajax.go(baseUrl+'unsign',"POST",null,function(res) {          	
         	if(res.message){
@@ -40,7 +46,7 @@ $(function() {
         	
             event.preventDefault(); // prevent default submit behaviour
             
-            UTIL.ajax.go(url,"POST",data,function(res) {          	
+            UTIL.ajax.go(url,"POST",data,function(res) {   
             	if(res.message){
             		showMsg(res.message);
             	}else{          		
@@ -52,13 +58,15 @@ $(function() {
             return $(this).is(":visible");
         },
     });
-    
-    
 
     $("a[data-toggle=\"tab\"]").click(function(e) {
         e.preventDefault();
         $(this).tab("show");
     });
+    
+    VLIFE.game.reincarnate = function(callbackFunc){
+    	UTIL.ajax.go(baseUrl+'reincarnate',"POST",null,callbackFunc);
+    }
 });
 
 function showMsg(msg){	
@@ -72,8 +80,8 @@ function showMsg(msg){
 }
 
 /* When clicking on Full hide fail/success boxes */
-$('#name').focus(function() {
-    $('#success').html('');
+$('input').focus(function() {
+   $('#success').hide();
 });
 
 $('input').on('ifChecked', function(event){
@@ -87,3 +95,7 @@ $('[name=entertype]').on('ifChecked', function(event){
 		  $('.for-reg').hide();
 	  }
 });
+
+$(".game-page").click(function(){
+	$($(this).attr("href")).load(baseUrl+$(this).attr("url"));
+})
