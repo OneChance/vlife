@@ -1,5 +1,5 @@
 $(function() {
-	
+
 	var VLIFE = {
 		game:{}
 	};
@@ -66,6 +66,14 @@ $(function() {
     
     VLIFE.game.reincarnate = function(callbackFunc){
     	UTIL.ajax.go(baseUrl+'reincarnate',"POST",null,callbackFunc);
+    }
+    
+    VLIFE.game.changeProp = function(propData,callbackFunc){
+    	UTIL.ajax.go(baseUrl+'changeprop',"POST",propData,callbackFunc);
+    }
+    
+    VLIFE.game.showMsg = function(msg){
+    	alert(msg);
     }
 });
 

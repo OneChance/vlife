@@ -31,6 +31,7 @@ public class GameController {
 		if (account != null) {
 			Species species = gameService.getSpeice(account);
 			Long remainTime = gameService.getRemainTime(account, species);
+			request.setAttribute("account", account);
 			request.setAttribute("species", species);
 			request.setAttribute("remainTime", remainTime);
 			profile = species.getName() + "/" + account.getLevel() + ".png";
@@ -49,11 +50,11 @@ public class GameController {
 			throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
-		Account checkedAccount = accountService.checkLogin(account);
-		if (checkedAccount == null) {
-			jt.setMessage(Message.getMessage(request, account.getCheckMsg()));
+		String checkRes = accountService.checkLogin(account);
+		if (!checkRes.equals("")) {
+			jt.setMessage(Message.getMessage(request, checkRes));
 		} else {
-			EnterGame(request, response, checkedAccount);
+			EnterGame(request, response, account);
 		}
 
 		return jt;
@@ -66,10 +67,10 @@ public class GameController {
 
 		JsonTool jt = JsonTool.getJson("");
 
-		Account checkedAccount = accountService.checkAccount(account);
+		String checkRes = accountService.checkAccount(account);
 
-		if (checkedAccount == null) {
-			jt.setMessage(Message.getMessage(request, account.getCheckMsg()));
+		if (!checkRes.equals("")) {
+			jt.setMessage(Message.getMessage(request, checkRes));
 		} else {
 			accountService.saveAccount(account);
 			EnterGame(request, response, account);
@@ -83,7 +84,6 @@ public class GameController {
 			HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
-
 		request.getSession().setAttribute("loginAccount", null);
 		WebUtil.cleanCookies(response, "vlife_uinfo");
 
@@ -92,7 +92,6 @@ public class GameController {
 
 	public void EnterGame(HttpServletRequest request,
 			HttpServletResponse response, Account account) throws Exception {
-		request.getSession().setAttribute("loginAccount", account);
 		WebUtil.setCookies(response, "vlife_uinfo", account.getId().toString());
 	}
 
@@ -110,6 +109,19 @@ public class GameController {
 		return "reincarnate_guide";
 	}
 
+	@RequestMapping("property")
+	public String property(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+
+		request.setAttribute("account", account);
+		request.setAttribute("species", species);
+
+		return "property";
+	}
+
 	@RequestMapping("reincarnate")
 	public JsonTool reincarnate(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -118,12 +130,28 @@ public class GameController {
 
 		Account account = accountService.getLoginAccount(request);
 
-		Account reincarnatedAccount = gameService.reincarnate(account);
+		String res = gameService.reincarnate(account);
 
-		if (reincarnatedAccount == null) {
-			jt.setMessage(account.getCheckMsg());
-		} else {
-			request.getSession().setAttribute("loginAccount", account);
+		if (!res.equals("")) {
+			jt.setMessage(Message.getMessage(request, res));
+		}
+
+		return jt;
+	}
+
+	@RequestMapping("changeprop")
+	public JsonTool changeprop(@ModelAttribute("account") Account propAccount,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		JsonTool jt = JsonTool.getJson("");
+
+		Account account = accountService.getLoginAccount(request);
+
+		String res = gameService.changeProp(account, propAccount);
+
+		if (!res.equals("")) {
+			jt.setMessage(Message.getMessage(request, res));
 		}
 
 		return jt;

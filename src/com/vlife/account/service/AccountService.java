@@ -24,13 +24,12 @@ public class AccountService extends DatabaseService {
 		return "";
 	}
 
-	public Account checkAccount(Account account) throws Exception {
+	public String checkAccount(Account account) throws Exception {
 
 		String inputRes = accountInputCheck(account);
 
 		if (!inputRes.equals("")) {
-			account.setCheckMsg(inputRes);
-			return null;
+			return inputRes;
 		}
 
 		Account accountDb = this.get(Account.class,
@@ -38,11 +37,10 @@ public class AccountService extends DatabaseService {
 				new String[] { account.getAccount() });
 
 		if (accountDb != null) {
-			account.setCheckMsg("accountexist");
-			return null;
+			return "accountexist";
 		}
 
-		return account;
+		return "";
 	}
 
 	public void saveAccount(Account account) throws Exception {
@@ -52,13 +50,12 @@ public class AccountService extends DatabaseService {
 		this.save(account);
 	}
 
-	public Account checkLogin(Account account) throws Exception {
+	public String checkLogin(Account account) throws Exception {
 
 		String inputRes = accountInputCheck(account);
 
 		if (!inputRes.equals("")) {
-			account.setCheckMsg(inputRes);
-			return null;
+			return inputRes;
 		}
 
 		Account account_db = this.get(Account.class,
@@ -66,11 +63,10 @@ public class AccountService extends DatabaseService {
 				new String[] { account.getAccount(), account.getPassword() });
 
 		if (account_db == null) {
-			account.setCheckMsg("accounterror");
-			return null;
+			return "accounterror";
 		}
 
-		return account_db;
+		return "";
 	}
 
 	public Account getAccount(String id) throws NumberFormatException,
@@ -83,6 +79,11 @@ public class AccountService extends DatabaseService {
 			throws NumberFormatException, Exception {
 		Account account = (Account) request.getSession().getAttribute(
 				"loginAccount");
+
+		if (account != null) {
+			account = this.getAccount(account.getId().toString());
+		}
+
 		return account;
 	}
 

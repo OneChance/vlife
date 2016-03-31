@@ -61,13 +61,12 @@ public class GameService extends DatabaseService {
 		return specieSoul * specisLevel;
 	}
 
-	public Account reincarnate(Account account) throws Exception {
+	public String reincarnate(Account account) throws Exception {
 
 		Species species = this.getSpeice(account);
 
 		if (this.getRemainTime(account, species) > 0) {
-			account.setCheckMsg("stillremaintime");
-			return null;
+			return "stillremaintime";
 		}
 
 		Integer soul = this.calSoulGet(account, species);
@@ -83,7 +82,40 @@ public class GameService extends DatabaseService {
 
 		this.merge(account);
 
-		return account;
+		return "";
+	}
+
+	public String changeProp(Account account, Account prop) throws Exception {
+
+		Integer addPow = prop.getAddPow();
+		Integer addDef = prop.getAddDef();
+		Integer addDex = prop.getAddDex();
+		Integer addInt = prop.getAddInt();
+		Integer addHp = prop.getAddHp();
+
+		if (addPow + addDef + addDex + addInt + addHp > account.getSoul()) {
+			return "notenoughsoul";
+		}
+
+		if (addPow < (0 - account.getAddPow())
+				|| addDef < (0 - account.getAddDef())
+				|| addDex < (0 - account.getAddDex())
+				|| addInt < (0 - account.getAddInt())
+				|| addHp < (0 - account.getAddHp())) {
+			return "propdataerror";
+		}
+
+		account.setAddPow(account.getAddPow() + addPow);
+		account.setAddDef(account.getAddDef() + addDef);
+		account.setAddDex(account.getAddDex() + addDex);
+		account.setAddInt(account.getAddInt() + addInt);
+		account.setAddHp(account.getAddHp() + addHp);
+		account.setSoul(account.getSoul()
+				- (addPow + addDef + addDex + addInt + addHp));
+
+		this.merge(account);
+
+		return "";
 	}
 
 	public void assetConvert(Account account) {

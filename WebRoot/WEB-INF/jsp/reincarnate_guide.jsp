@@ -5,7 +5,7 @@
 		$("#reincarnation").click(function(){
 			VLIFE.game.reincarnate(function(res){
 				if(res.message){
-            		alert("<spring:message code="stillremaintime" />");
+            		VLIFE.game.showMsg(res.message);
             	}else{          		
             		location = location;
             	}

@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "account")
@@ -31,9 +30,6 @@ public class Account {
 	private Date reincarnateTime;
 	private Integer level;
 	private Integer exp;
-
-	@Transient
-	private String checkMsg;
 
 	public Account() {
 		this.specie = 0;
@@ -149,14 +145,6 @@ public class Account {
 
 	public void setReincarnateTime(Date reincarnateTime) {
 		this.reincarnateTime = reincarnateTime;
-	}
-
-	public String getCheckMsg() {
-		return checkMsg;
-	}
-
-	public void setCheckMsg(String checkMsg) {
-		this.checkMsg = checkMsg;
 	}
 
 	public Integer getLevel() {

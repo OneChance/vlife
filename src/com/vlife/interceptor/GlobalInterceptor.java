@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import com.vlife.account.entity.Account;
-import com.vlife.account.service.AccountService;
 import com.vlife.tool.JsonTool;
 import com.vlife.tool.WebUtil;
 
@@ -58,7 +56,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
 				String id = WebUtil.getCookies(request, "vlife_uinfo");
 
 				if (null != id && !id.equals("")) {
-					account = accountService.getAccount(id);
+					account = new Account();
+					account.setId(Long.parseLong(id));
 				}
 			}
 
@@ -136,8 +135,4 @@ public class GlobalInterceptor implements HandlerInterceptor {
 
 		request.setAttribute(ENVIRONMENT_REQUEST_NAME, env);
 	}
-
-	@Resource
-	private AccountService accountService;
-
 }

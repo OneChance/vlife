@@ -2,6 +2,7 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+
 <!DOCTYPE html>
 <html>
 
@@ -9,7 +10,7 @@
 
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
 
@@ -71,7 +72,7 @@
 							<a href="#portfolio"><spring:message code="info" /> </a>
 						</li>
 
-						<c:if test="${not empty loginAccount}">
+						<c:if test="${login}">
 							<li>
 								<a id="unsign" style="cursor: pointer;"><spring:message
 										code="unsign" /> </a>
@@ -95,14 +96,14 @@
 								<a href="#contact">
 							</c:if>
 							<c:if test="${login}">
-								<a>
+								<a href="#property" class="portfolio-link game-page" url="property" data-toggle="modal">
 							</c:if>
 							<img class="img-responsive"
 									src="${env.resourcesUrl}/vlife/img/${profile}" alt=""> </a>
 						</p>
 						<div class="intro-text">
 							<span class="name"> <c:if test="${login}">
-									${loginAccount.name}&nbsp;<spring:message code="maintitle" />
+									${account.name}&nbsp;<spring:message code="maintitle" />
 									<spring:message code="${species.name}" />
 								</c:if> <c:if test="${not login}">
 									<spring:message code="nolife" />
@@ -227,7 +228,7 @@
 		</section>
 
 		<!-- Contact Section -->
-		<c:if test="${empty loginAccount}">
+		<c:if test="${not login}">
 			<section id="contact">
 				<div class="container">
 					<div class="row">
@@ -674,7 +675,9 @@
 		<!-- Portfolio Modals -->
 		<div class="portfolio-modal modal fade" id="reincarnateGuide"
 			tabindex="-1" role="dialog" aria-hidden="true">
-
+		</div>
+		<div class="portfolio-modal modal fade" id="property"
+			tabindex="-1" role="dialog" aria-hidden="true">
 		</div>
 
 		<!-- jQuery Version 1.11.0 -->
