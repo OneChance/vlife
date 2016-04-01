@@ -30,6 +30,7 @@ public class Account {
 	private Date reincarnateTime;
 	private Integer level;
 	private Integer exp;
+	private Integer region;
 
 	public Account() {
 		this.specie = 0;
@@ -161,6 +162,14 @@ public class Account {
 
 	public void setExp(Integer exp) {
 		this.exp = exp;
+	}
+
+	public Integer getRegion() {
+		return region;
+	}
+
+	public void setRegion(Integer region) {
+		this.region = region;
 	}
 
 }

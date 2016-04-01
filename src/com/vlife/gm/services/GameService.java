@@ -1,16 +1,33 @@
 package com.vlife.gm.services;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
+import com.vlife.gm.entity.Region;
+import com.vlife.gm.entity.RegionTree;
 import com.vlife.gm.entity.Species;
+import com.vlife.tool.JsonTool;
 
 @Service
 public class GameService extends DatabaseService {
+
+	public Map<String, String> speciesRegion = new HashMap<String, String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		{
+			put("fish", "river,");
+			put("bird", "city,forest");
+		}
+	};
 
 	public Integer reincarnation(Integer soul) {
 		Random random = new Random();
@@ -50,7 +67,7 @@ public class GameService extends DatabaseService {
 				- account.getReincarnateTime().getTime();
 		Long totalTime = species.getLifetime() * 24 * 60 * 60 * 1000l;
 
-		return totalTime - passTime;
+		return Math.max(0, totalTime - passTime);
 	}
 
 	public Integer calSoulGet(Account account, Species species) {
@@ -87,6 +104,12 @@ public class GameService extends DatabaseService {
 
 	public String changeProp(Account account, Account prop) throws Exception {
 
+		Species species = this.getSpeice(account);
+
+		if (this.getRemainTime(account, species) < 24 * 60 * 60 * 1000) {
+			return "cannotchangefromtime";
+		}
+
 		Integer addPow = prop.getAddPow();
 		Integer addDef = prop.getAddDef();
 		Integer addDex = prop.getAddDex();
@@ -120,5 +143,37 @@ public class GameService extends DatabaseService {
 
 	public void assetConvert(Account account) {
 
+	}
+
+	public String getRegionTreeData(Species species) {
+
+		String sql = "select * from region";
+		List<Region> rList = this.getJdbcTemplate().query(sql,
+				new BeanPropertyRowMapper<Region>(Region.class));
+		RegionTree rTree = new RegionTree();
+
+		for (Region r : rList) {
+			setAbleBySpecies(r, species);
+			rTree.addRegion(r);
+		}
+
+		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
+
+		data = "["
+				+ data.replaceAll("name", "text")
+						.replaceAll("subRegions", "nodes")
+						.replaceAll(",\"nodes\":\\[\\]", "") + "]";
+
+		return data;
+	}
+
+	public void setAbleBySpecies(Region r, Species s) {
+		if (r.getType() != null) {
+			if (speciesRegion.get(s.getName()).contains(r.getType())) {
+				r.setAble(true);
+			} else {
+				r.setAble(false);
+			}
+		}
 	}
 }

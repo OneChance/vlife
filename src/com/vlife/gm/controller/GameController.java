@@ -118,6 +118,8 @@ public class GameController {
 
 		request.setAttribute("account", account);
 		request.setAttribute("species", species);
+		request.setAttribute("remainTime",
+				gameService.getRemainTime(account, species));
 
 		return "property";
 	}
@@ -155,6 +157,22 @@ public class GameController {
 		}
 
 		return jt;
+	}
+
+	@RequestMapping("region")
+	public String region(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+
+		String treeData = gameService.getRegionTreeData(species);
+
+		request.setAttribute("treeData", treeData);
+		request.setAttribute("account", account);
+		request.setAttribute("species", species);
+
+		return "region";
 	}
 
 	@Resource
