@@ -64,6 +64,8 @@ public class AccountService extends DatabaseService {
 
 		if (account_db == null) {
 			return "accounterror";
+		}else{
+			account.setId(account_db.getId());
 		}
 
 		return "";

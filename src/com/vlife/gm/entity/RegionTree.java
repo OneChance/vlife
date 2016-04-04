@@ -6,11 +6,14 @@ import java.util.List;
 public class RegionTree {
 
 	private Region root;
+	private List<Region> regionList;
 
 	public RegionTree() {
 		root = new Region();
 		root.setId(-1);
 		root.setName("world");
+		regionList = new ArrayList<Region>();
+		loadRegion(root,regionList);
 	}
 
 	public void addRegion(Region r) {
@@ -31,12 +34,13 @@ public class RegionTree {
 		} else {
 			parentR.getSubRegions().add(r);
 		}
+		
+		regionList.add(r);
 	}
 
 	public Region getRegionById(Integer id) {
-		List<Region> rList = new ArrayList<Region>();
-		this.findRegion(root, rList);
-		for (Region r : rList) {
+
+		for (Region r : regionList) {
 			if (r.getId().intValue() == id.intValue()) {
 				return r;
 			}
@@ -44,13 +48,13 @@ public class RegionTree {
 		return null;
 	}
 
-	public void findRegion(Region r, List<Region> rList) {
+	public void loadRegion(Region r, List<Region> rList) {
 
 		rList.add(r);
 
 		if (r.getSubRegions().size() > 0) {
 			for (Region rs : r.getSubRegions()) {
-				findRegion(rs, rList);
+				loadRegion(rs, rList);
 			}
 		}
 	}
@@ -64,6 +68,58 @@ public class RegionTree {
 				printTree(rs, head + "--");
 			}
 		}
+	}
+	
+	public void setDeep(Region r,Integer deep){
+		if(r.getSubRegions().size()==0){
+			r.setDeep(deep);
+		}else{
+			
+			r.setDeep(deep);
+			
+			for(Region rs:r.getSubRegions()){
+				setDeep(rs,deep+1);
+			}
+		}	
+	}
+	
+	public String getPath(Integer rid){
+		
+		String path ="";
+		
+		Region r = this.getRegionById(rid);
+		
+		if(r!=null){
+			while(r.getId()!=-1){
+				path = path + r.getId() + "," ;
+				r = this.getRegionById(r.getPid());
+			}
+		}
+		
+		path = path + "-1";
+		
+		return path;
+	}
+	
+	public Integer getDistance(Integer fromRid,Integer toRid){
+		
+		String orPath = this.getPath(fromRid);
+		String nrPath = this.getPath(toRid);
+		
+		String[] orPathNodes = orPath.split(",");
+		String[] nrPathNodes = nrPath.split(",");
+		
+		for(int i=0;i<orPathNodes.length;i++){			
+			String on = orPathNodes[i];			
+			for(int j=0;j<nrPathNodes.length;j++){
+				String nn = nrPathNodes[j];
+				if(on.equals(nn)){										
+					return Math.max(0, i+j-1);
+				}
+			}
+		}
+		
+		return -1;
 	}
 
 	public Region getRoot() {

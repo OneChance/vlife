@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
 import com.vlife.gm.entity.Region;
+import com.vlife.gm.entity.RegionInfo;
 import com.vlife.gm.entity.RegionTree;
 import com.vlife.gm.entity.Species;
-import com.vlife.tool.JsonTool;
 
 @Service
 public class GameService extends DatabaseService {
@@ -145,26 +145,24 @@ public class GameService extends DatabaseService {
 
 	}
 
-	public String getRegionTreeData(Species species) {
+	public RegionTree getRegionTree(Species species) {
 
 		String sql = "select * from region";
 		List<Region> rList = this.getJdbcTemplate().query(sql,
 				new BeanPropertyRowMapper<Region>(Region.class));
+		
 		RegionTree rTree = new RegionTree();
 
 		for (Region r : rList) {
-			setAbleBySpecies(r, species);
+			if(species!=null){
+				setAbleBySpecies(r, species);
+			}		
 			rTree.addRegion(r);
 		}
+		
+		rTree.setDeep(rTree.getRoot(),1);
 
-		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
-
-		data = "["
-				+ data.replaceAll("name", "text")
-						.replaceAll("subRegions", "nodes")
-						.replaceAll(",\"nodes\":\\[\\]", "") + "]";
-
-		return data;
+		return rTree;
 	}
 
 	public void setAbleBySpecies(Region r, Species s) {
@@ -175,5 +173,21 @@ public class GameService extends DatabaseService {
 				r.setAble(false);
 			}
 		}
+	}
+	
+	public RegionInfo getRegionInfo(Account account,Integer regionId){
+		RegionInfo ri = new RegionInfo();
+		
+		RegionTree rTree = this.getRegionTree(null);
+		
+		Integer cost = rTree.getDistance(account.getRegion(), regionId);
+		
+		if(cost<0){
+			return null;
+		}
+		
+		ri.setCost(cost);		
+				
+		return ri;
 	}
 }

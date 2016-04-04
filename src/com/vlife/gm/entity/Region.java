@@ -3,22 +3,21 @@ package com.vlife.gm.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Transient;
-
 public class Region {
 	private Integer id;
 	private Integer pid;
 	private String name;
 	private String type;
 	private List<Region> subRegions;
-	@Transient
 	private boolean able;
+	private Integer deep;
 
 	public Region() {
 		subRegions = new ArrayList<Region>();
 		id = 0;
 		pid = 0;
 		name = "";
+		deep = 0;
 	}
 
 	public Integer getId() {
@@ -69,4 +68,12 @@ public class Region {
 		this.able = able;
 	}
 
+	public Integer getDeep() {
+		return deep;
+	}
+
+	public void setDeep(Integer deep) {
+		this.deep = deep;
+	}
+	
 }

@@ -75,6 +75,10 @@ $(function() {
     VLIFE.game.showMsg = function(msg){
     	alert(msg);
     }
+    
+    VLIFE.game.regionInfo = function(regionId,callbackFunc){
+    	UTIL.ajax.go(baseUrl+'regionInfo',"POST",{regionId:regionId},callbackFunc);
+    }
 });
 
 function showMsg(msg){	

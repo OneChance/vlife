@@ -1,22 +1,34 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-			
+
 <script>
 	$(function() {
 
 		var defaultData = '${treeData}';
 
-		$('#treeview5').treeview({
-			color : "#18BC9C",
-			expandIcon : 'glyphicon glyphicon-chevron-right',
-			collapseIcon : 'glyphicon glyphicon-chevron-down',
-			nodeIcon : 'fa fa-map-marker',
-			data : defaultData,
-			onNodeSelected: function(event, node) {
-			  if(!node.nodes){
-			  	alert(node.able)
-			  }
-            }
-		});
+		$('#treeview5')
+				.treeview(
+						{
+							color : "#18BC9C",
+							expandIcon : 'glyphicon glyphicon-chevron-right',
+							collapseIcon : 'glyphicon glyphicon-chevron-down',
+							nodeIcon : 'fa fa-map-marker',
+							data : defaultData,
+							onNodeSelected : function(event, node) {
+								if (!node.nodes) {
+									VLIFE.game
+											.regionInfo(
+													node.id,
+													function(res) {
+														if (res.message) {
+															VLIFE.game
+																	.showMsg(res.message);
+														} else {
+															alert(res.data.cost);
+														}
+													});
+								}
+							}
+						});
 	});
 </script>
 

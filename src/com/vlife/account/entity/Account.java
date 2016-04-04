@@ -42,6 +42,7 @@ public class Account {
 		this.addInt = 0;
 		this.level = 0;
 		this.exp = 0;
+		this.region = 0;
 	}
 
 	public Long getId() {

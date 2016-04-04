@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vlife.account.entity.Account;
 import com.vlife.account.service.AccountService;
+import com.vlife.gm.entity.RegionInfo;
+import com.vlife.gm.entity.RegionTree;
 import com.vlife.gm.entity.Species;
 import com.vlife.gm.services.GameService;
 import com.vlife.tool.JsonTool;
@@ -166,13 +168,43 @@ public class GameController {
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
-		String treeData = gameService.getRegionTreeData(species);
+		RegionTree rTree = gameService.getRegionTree(species);
+		
+		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
 
-		request.setAttribute("treeData", treeData);
+		data = "["
+				+ data.replaceAll("name", "text")
+						.replaceAll("subRegions", "nodes")
+						.replaceAll(",\"nodes\":\\[\\]", "") + "]";
+		
+		request.setAttribute("treeData", data);
 		request.setAttribute("account", account);
 		request.setAttribute("species", species);
 
 		return "region";
+	}
+	
+	@RequestMapping("regionInfo")
+	public JsonTool regionInfo(@ModelAttribute("account") Account propAccount,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		String regionId = request.getParameter("regionId");
+		
+		JsonTool jt = JsonTool.getJson("");
+
+		if(regionId!=null && !regionId.equals("")){
+			Account account = accountService.getLoginAccount(request);
+			RegionInfo ri = gameService.getRegionInfo(account, Integer.parseInt(regionId));
+			
+			if(ri==null){
+				jt.setMessage(Message.getMessage(request, "regioninfoerror"));
+			}else{
+				jt.setData(ri);
+			}
+		}
+
+		return jt;
 	}
 
 	@Resource
