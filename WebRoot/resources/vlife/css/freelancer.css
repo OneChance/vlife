@@ -502,3 +502,7 @@ addp{
 	color:green;
 	font-weight: bold;
 }
+
+.info-container{
+	padding-top: 8px;
+}

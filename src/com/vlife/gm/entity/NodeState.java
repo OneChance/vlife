@@ -1,0 +1,28 @@
+package com.vlife.gm.entity;
+
+public class NodeState {
+	private boolean selected;
+	private boolean expanded;
+
+	public NodeState() {
+		selected = false;
+		expanded = false;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public boolean isExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
+
+}

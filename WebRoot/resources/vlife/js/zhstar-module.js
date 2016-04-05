@@ -15,7 +15,7 @@
             dataType:"json",
             success:success,
             error: function() {         	
-            	alert(server_error_msg);
+            	VLIFE.game.showMsg(server_error_msg);
             },
         });
 	}

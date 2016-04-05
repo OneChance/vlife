@@ -325,11 +325,7 @@
 								</div>
 
 								<br>
-								<div id="success" style="display: none">
-									<div class="alert alert-danger">
-										<strong></strong>
-									</div>
-								</div>
+
 								<div class="row">
 									<div class="form-group col-xs-12">
 										<button type="submit" class="btn btn-primary btn-lg">

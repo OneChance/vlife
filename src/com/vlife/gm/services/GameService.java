@@ -145,22 +145,27 @@ public class GameService extends DatabaseService {
 
 	}
 
-	public RegionTree getRegionTree(Species species) {
+	public RegionTree getRegionTree(Species species, Account account) {
 
 		String sql = "select * from region";
 		List<Region> rList = this.getJdbcTemplate().query(sql,
 				new BeanPropertyRowMapper<Region>(Region.class));
-		
+
 		RegionTree rTree = new RegionTree();
 
 		for (Region r : rList) {
-			if(species!=null){
+			if (species != null) {
 				setAbleBySpecies(r, species);
-			}		
+			}
+
+			if (r.getId().intValue() == account.getRegion().intValue()) {
+				r.setColor("#2c3e50");
+			}
+
 			rTree.addRegion(r);
 		}
-		
-		rTree.setDeep(rTree.getRoot(),1);
+
+		rTree.setDeep(rTree.getRoot(), 1);
 
 		return rTree;
 	}
@@ -174,20 +179,20 @@ public class GameService extends DatabaseService {
 			}
 		}
 	}
-	
-	public RegionInfo getRegionInfo(Account account,Integer regionId){
+
+	public RegionInfo getRegionInfo(Account account, Integer regionId) {
 		RegionInfo ri = new RegionInfo();
-		
-		RegionTree rTree = this.getRegionTree(null);
-		
+
+		RegionTree rTree = this.getRegionTree(null, account);
+
 		Integer cost = rTree.getDistance(account.getRegion(), regionId);
-		
-		if(cost<0){
+
+		if (cost < 0) {
 			return null;
 		}
-		
-		ri.setCost(cost);		
-				
+
+		ri.setCost(cost);
+
 		return ri;
 	}
 }

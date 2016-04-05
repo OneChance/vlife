@@ -14,21 +14,53 @@
 							nodeIcon : 'fa fa-map-marker',
 							data : defaultData,
 							onNodeSelected : function(event, node) {
+
 								if (!node.nodes) {
+								
 									VLIFE.game
 											.regionInfo(
 													node.id,
 													function(res) {
 														if (res.message) {
-															VLIFE.game
-																	.showMsg(res.message);
+															VLIFE.game.showMsg(res.message);
 														} else {
-															alert(res.data.cost);
+															
+															var moveCostNoti = "<spring:message code='movecost' arguments='"+res.data.cost+"'/>";
+															var confirmText = "<spring:message code='move'/>";
+															var cancelText = "<spring:message code='cancel'/>";
+															
+															if(res.data.cost==0){
+																moveCostNoti = "<spring:message code='currentregion'/>";
+															}	
+															
+															var info_detail;
+															
+															var button = true;
+															
+															if('${account.region}'==node.id){
+																button = false;
+															}
+															
+															
+
+															VLIFE.game.showMsg(moveCostNoti,"info",true,"<spring:message code='regioninfo'/>",info_detail,button,confirmText,function(){
+																
+															},cancelText,function(){
+																alert(node)
+																//nodeUnSelect(node);
+															});										
 														}
 													});
 								}
 							}
 						});
+		
+		var tree = $('#treeview5').treeview(true);
+		tree.expandToNode('${account.region}');
+		
+		nodeUnSelect = function(node){
+			//tree.unselectNode(node);
+		}
 	});
 </script>
 

@@ -9,7 +9,7 @@ $(function() {
 	$('#unsign').click(function(){		
 		UTIL.ajax.go(baseUrl+'unsign',"POST",null,function(res) {          	
         	if(res.message){
-        		showMsg(res.message);
+        		VLIFE.game.showMsg(res.message);
         	}else{
         		location = location;
         	}
@@ -48,9 +48,9 @@ $(function() {
             
             UTIL.ajax.go(url,"POST",data,function(res) {   
             	if(res.message){
-            		showMsg(res.message);
+            		VLIFE.game.showMsg(res.message);
             	}else{          		
-            		location = location;            		 
+            		location = location;        		 
             	}
             });
         },
@@ -64,6 +64,18 @@ $(function() {
         $(this).tab("show");
     });
     
+    show_info_detail = function(){
+    	$("#info_detail").toggle("normal");
+    }
+    
+    info_cancel = function(func){
+    	$('#global_msg').fadeOut();
+    	(func)();
+    }
+    info_confirm = function(func){
+    	(func)();
+    }
+    
     VLIFE.game.reincarnate = function(callbackFunc){
     	UTIL.ajax.go(baseUrl+'reincarnate',"POST",null,callbackFunc);
     }
@@ -72,8 +84,45 @@ $(function() {
     	UTIL.ajax.go(baseUrl+'changeprop',"POST",propData,callbackFunc);
     }
     
-    VLIFE.game.showMsg = function(msg){
-    	alert(msg);
+    VLIFE.game.showMsg = function(msg,type,moreInfo,moreText,infoContent,button,confirmText,confirmFunc,cancelText,cancelFunc){
+    	
+    	if($('#global_msg')){
+    		$('#global_msg').remove();
+    	}
+    	
+    	if(!type){
+    		type = 'danger';
+    	}
+    	
+    	var content = "<div class='alert alert-"+type+"' id='global_msg' style='z-index:3000;position:fixed; top:10px;left:10px;display:none'><button type='button' class='close' data-dismiss='alert' onclick='("+cancelFunc+")();'>&times;</button>"+
+		  "<strong>"+msg+"</strong>";
+    	
+    	if(moreInfo){
+    		content = content + "<a href='javacript:void(0);' onclick='show_info_detail();' style='margin-left:10px;'>"+moreText+"</a><p><div class='info-container' style='display:none' id='info_detail'>"+infoContent+"</div>";
+    	}
+    	
+    	if(button){
+    		content = content +　"<p><div style='padding-top:8px;text-align: center;'>" +
+    							 "<button type='button' class='btn btn-success btn-sm' onclick='info_confirm("+confirmFunc+");'><i class='fa fa-edit'></i>"+confirmText+"&nbsp;&nbsp;"+
+    							 "<button type='button' class='btn btn-warning btn-sm' onclick='info_cancel("+cancelFunc+");' style='margin-left:5px;'><i class='fa fa-edit'></i>"+cancelText+"</div>";
+    	}
+    	
+    	content = content + "</div>";
+    	
+    	
+    	$('#page-top').append(content);
+    	
+    	$('#global_msg').fadeIn('slow',function(){
+    		
+    		if(!moreInfo){
+    			setTimeout(function () { 
+        			if($('#global_msg').is(':visible')){
+        				$('#global_msg').fadeOut();
+        			}	
+        	    }, 1000);
+    		}
+    		
+    	});
     }
     
     VLIFE.game.regionInfo = function(regionId,callbackFunc){
@@ -81,15 +130,6 @@ $(function() {
     }
 });
 
-function showMsg(msg){	
-	$('#success').fadeIn('slow',function(){
-		setTimeout(function () { 
-			if($('#success').is(':visible')){
-				$('#success').fadeOut();
-			}	
-	    }, 1000);
-	}).find("strong").html(msg); 
-}
 
 /* When clicking on Full hide fail/success boxes */
 $('input').focus(function() {

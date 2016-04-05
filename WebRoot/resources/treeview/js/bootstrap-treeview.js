@@ -123,6 +123,7 @@
 			collapseNode: $.proxy(this.collapseNode, this),
 			expandAll: $.proxy(this.expandAll, this),
 			expandNode: $.proxy(this.expandNode, this),
+			expandToNode: $.proxy(this.expandToNode, this),
 			toggleNodeExpanded: $.proxy(this.toggleNodeExpanded, this),
 			revealNode: $.proxy(this.revealNode, this),
 
@@ -368,7 +369,6 @@
 		if (state === node.state.expanded) return;
 
 		if (state && node.nodes) {
-
 			// Expand a node
 			node.state.expanded = true;
 			if (!options.silent) {
@@ -1205,6 +1205,28 @@
 				return undefined;
 			}
 		}
+	};
+	
+	Tree.prototype.expandToNode = function(id){
+		
+		var aTree = this;
+		var nodeId;
+		
+		$.each(aTree.nodes,function(){
+			if(this.id==id){
+
+				nodeId = this.nodeId;
+				
+				var pNode = aTree.getParent(this);
+				
+				while(pNode){
+					aTree.expandNode(pNode);
+					pNode = aTree.getParent(pNode);
+				}
+				
+				return true;
+			}
+		});
 	};
 
 	var logError = function (message) {

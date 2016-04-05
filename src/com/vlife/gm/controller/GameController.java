@@ -168,38 +168,39 @@ public class GameController {
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
-		RegionTree rTree = gameService.getRegionTree(species);
-		
+		RegionTree rTree = gameService.getRegionTree(species, account);
+
 		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
 
 		data = "["
 				+ data.replaceAll("name", "text")
 						.replaceAll("subRegions", "nodes")
 						.replaceAll(",\"nodes\":\\[\\]", "") + "]";
-		
+
 		request.setAttribute("treeData", data);
 		request.setAttribute("account", account);
 		request.setAttribute("species", species);
 
 		return "region";
 	}
-	
+
 	@RequestMapping("regionInfo")
 	public JsonTool regionInfo(@ModelAttribute("account") Account propAccount,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
 		String regionId = request.getParameter("regionId");
-		
+
 		JsonTool jt = JsonTool.getJson("");
 
-		if(regionId!=null && !regionId.equals("")){
+		if (regionId != null && !regionId.equals("")) {
 			Account account = accountService.getLoginAccount(request);
-			RegionInfo ri = gameService.getRegionInfo(account, Integer.parseInt(regionId));
-			
-			if(ri==null){
+			RegionInfo ri = gameService.getRegionInfo(account,
+					Integer.parseInt(regionId));
+
+			if (ri == null) {
 				jt.setMessage(Message.getMessage(request, "regioninfoerror"));
-			}else{
+			} else {
 				jt.setData(ri);
 			}
 		}

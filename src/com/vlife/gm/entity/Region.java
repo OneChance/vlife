@@ -11,6 +11,8 @@ public class Region {
 	private List<Region> subRegions;
 	private boolean able;
 	private Integer deep;
+	private NodeState state;
+	private String color;
 
 	public Region() {
 		subRegions = new ArrayList<Region>();
@@ -18,6 +20,8 @@ public class Region {
 		pid = 0;
 		name = "";
 		deep = 0;
+		state = new NodeState();
+		color = "";
 	}
 
 	public Integer getId() {
@@ -75,5 +79,21 @@ public class Region {
 	public void setDeep(Integer deep) {
 		this.deep = deep;
 	}
-	
+
+	public NodeState getState() {
+		return state;
+	}
+
+	public void setState(NodeState state) {
+		this.state = state;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
 }
