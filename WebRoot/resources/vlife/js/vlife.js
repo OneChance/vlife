@@ -68,14 +68,6 @@ $(function() {
     	$("#info_detail").toggle("normal");
     }
     
-    info_cancel = function(func){
-    	$('#global_msg').fadeOut();
-    	(func)();
-    }
-    info_confirm = function(func){
-    	(func)();
-    }
-    
     VLIFE.game.reincarnate = function(callbackFunc){
     	UTIL.ajax.go(baseUrl+'reincarnate',"POST",null,callbackFunc);
     }
@@ -94,7 +86,7 @@ $(function() {
     		type = 'danger';
     	}
     	
-    	var content = "<div class='alert alert-"+type+"' id='global_msg' style='z-index:3000;position:fixed; top:10px;left:10px;display:none'><button type='button' class='close' data-dismiss='alert' onclick='("+cancelFunc+")();'>&times;</button>"+
+    	var content = "<div class='alert alert-"+type+"' id='global_msg' style='z-index:3000;position:fixed; top:10px;left:10px;display:none'><button type='button' class='close info_cancel' data-dismiss='alert'>&times;</button>"+
 		  "<strong>"+msg+"</strong>";
     	
     	if(moreInfo){
@@ -103,18 +95,22 @@ $(function() {
     	
     	if(button){
     		content = content +　"<p><div style='padding-top:8px;text-align: center;'>" +
-    							 "<button type='button' class='btn btn-success btn-sm' onclick='info_confirm("+confirmFunc+");'><i class='fa fa-edit'></i>"+confirmText+"&nbsp;&nbsp;"+
-    							 "<button type='button' class='btn btn-warning btn-sm' onclick='info_cancel("+cancelFunc+");' style='margin-left:5px;'><i class='fa fa-edit'></i>"+cancelText+"</div>";
+    							 "<button type='button' class='btn btn-success btn-sm info_confirm'><i class='fa fa-edit'></i>"+confirmText+"&nbsp;&nbsp;"+
+    							 "<button type='button' class='btn btn-warning btn-sm info_cancel' style='margin-left:5px;'><i class='fa fa-edit'></i>"+cancelText+"</div>";
     	}
     	
     	content = content + "</div>";
-    	
-    	
+
     	$('#page-top').append(content);
+    	
+    	$(".info_confirm").bind("click",confirmFunc);
+    	$(".info_cancel").bind("click",cancelFunc).click(function(){
+    		$('#global_msg').fadeOut();
+    	});
     	
     	$('#global_msg').fadeIn('slow',function(){
     		
-    		if(!moreInfo){
+    		if(!moreInfo && !button){
     			setTimeout(function () { 
         			if($('#global_msg').is(':visible')){
         				$('#global_msg').fadeOut();
@@ -125,8 +121,12 @@ $(function() {
     	});
     }
     
-    VLIFE.game.regionInfo = function(regionId,callbackFunc){
-    	UTIL.ajax.go(baseUrl+'regionInfo',"POST",{regionId:regionId},callbackFunc);
+    VLIFE.game.regionInfo = function(regionId,callbackFunc,errorFunc){
+    	UTIL.ajax.go(baseUrl+'regionInfo',"POST",{regionId:regionId},callbackFunc,errorFunc);
+    }
+    
+    VLIFE.game.regionMove = function(regionId,callbackFunc,errorFunc){
+    	UTIL.ajax.go(baseUrl+'regionMove',"POST",{regionId:regionId},callbackFunc,errorFunc);
     }
 });
 

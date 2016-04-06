@@ -399,10 +399,9 @@
 
 	Tree.prototype.setSelectedState = function (node, state, options) {
 
-		if (state === node.state.selected) return;
+		//if (state === node.state.selected) return;
 
 		if (state) {
-
 			// If multiSelect false, unselect previously selected
 			if (!this.options.multiSelect) {
 				$.each(this.findNodes('true', 'g', 'state.selected'), $.proxy(function (index, node) {
@@ -417,7 +416,6 @@
 			}
 		}
 		else {
-
 			// Unselect node
 			node.state.selected = false;
 			if (!options.silent) {
@@ -650,7 +648,6 @@
 
 	// Add inline style into head
 	Tree.prototype.injectStyle = function () {
-
 		if (this.options.injectStyle && !document.getElementById(this.styleId)) {
 			$('<style type="text/css" id="' + this.styleId + '"> ' + this.buildStyle() + ' </style>').appendTo('head');
 		}

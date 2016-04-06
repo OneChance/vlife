@@ -9,7 +9,6 @@ public class Region {
 	private String name;
 	private String type;
 	private List<Region> subRegions;
-	private boolean able;
 	private Integer deep;
 	private NodeState state;
 	private String color;
@@ -62,14 +61,6 @@ public class Region {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public boolean isAble() {
-		return able;
-	}
-
-	public void setAble(boolean able) {
-		this.able = able;
 	}
 
 	public Integer getDeep() {

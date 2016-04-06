@@ -3,17 +3,23 @@ package com.vlife.gm.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.servlet.support.RequestContext;
+
 public class RegionTree {
 
 	private Region root;
 	private List<Region> regionList;
+	private RequestContext context;
 
-	public RegionTree() {
+	public RegionTree(RequestContext context) {
 		root = new Region();
 		root.setId(-1);
-		root.setName("world");
 		regionList = new ArrayList<Region>();
-		loadRegion(root,regionList);
+		loadRegion(root, regionList);
+		this.context = context;
+		if (context != null) {
+			root.setName(context.getMessage("world"));
+		}
 	}
 
 	public void addRegion(Region r) {
@@ -34,7 +40,11 @@ public class RegionTree {
 		} else {
 			parentR.getSubRegions().add(r);
 		}
-		
+
+		if (context != null) {
+			r.setName(context.getMessage(r.getName()));
+		}
+
 		regionList.add(r);
 	}
 
@@ -69,56 +79,60 @@ public class RegionTree {
 			}
 		}
 	}
-	
-	public void setDeep(Region r,Integer deep){
-		if(r.getSubRegions().size()==0){
+
+	public void setDeep(Region r, Integer deep) {
+		if (r.getSubRegions().size() == 0) {
 			r.setDeep(deep);
-		}else{
-			
+		} else {
+
 			r.setDeep(deep);
-			
-			for(Region rs:r.getSubRegions()){
-				setDeep(rs,deep+1);
+
+			for (Region rs : r.getSubRegions()) {
+				setDeep(rs, deep + 1);
 			}
-		}	
+		}
 	}
-	
-	public String getPath(Integer rid){
-		
-		String path ="";
-		
+
+	public String getPath(Integer rid) {
+
+		String path = "";
+
 		Region r = this.getRegionById(rid);
-		
-		if(r!=null){
-			while(r.getId()!=-1){
-				path = path + r.getId() + "," ;
+
+		if (r != null) {
+			while (r.getId() != -1) {
+				path = path + r.getId() + ",";
 				r = this.getRegionById(r.getPid());
 			}
 		}
-		
+
 		path = path + "-1";
-		
+
 		return path;
 	}
-	
-	public Integer getDistance(Integer fromRid,Integer toRid){
-		
+
+	public Integer getDistance(Integer fromRid, Integer toRid) {
+
+		if (fromRid == 0) {
+			return 0;
+		}
+
 		String orPath = this.getPath(fromRid);
 		String nrPath = this.getPath(toRid);
-		
+
 		String[] orPathNodes = orPath.split(",");
 		String[] nrPathNodes = nrPath.split(",");
-		
-		for(int i=0;i<orPathNodes.length;i++){			
-			String on = orPathNodes[i];			
-			for(int j=0;j<nrPathNodes.length;j++){
+
+		for (int i = 0; i < orPathNodes.length; i++) {
+			String on = orPathNodes[i];
+			for (int j = 0; j < nrPathNodes.length; j++) {
 				String nn = nrPathNodes[j];
-				if(on.equals(nn)){										
-					return Math.max(0, i+j-1);
+				if (on.equals(nn)) {
+					return Math.max(0, i + j - 1);
 				}
 			}
 		}
-		
+
 		return -1;
 	}
 

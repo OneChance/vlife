@@ -176,7 +176,7 @@
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
-						<a href="#portfolioModal2" class="portfolio-link"
+						<a href="#action" class="portfolio-link game-page" url="action"
 							data-toggle="modal">
 							<div class="caption">
 								<div class="caption-content">
@@ -344,7 +344,6 @@
 
 		<!-- Footer -->
 		<footer class="text-center">
-
 			<div class="footer-below">
 				<div class="container">
 					<div class="row">
@@ -370,6 +369,9 @@
 			tabindex="-1" role="dialog" aria-hidden="true">
 		</div>
 		<div class="portfolio-modal modal fade" id="region"
+			tabindex="-1" role="dialog" aria-hidden="true">
+		</div>
+		<div class="portfolio-modal modal fade" id="action"
 			tabindex="-1" role="dialog" aria-hidden="true">
 		</div>
 

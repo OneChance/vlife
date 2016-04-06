@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.RequestContext;
 
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
@@ -19,6 +20,8 @@ import com.vlife.gm.entity.Species;
 @Service
 public class GameService extends DatabaseService {
 
+	public static Integer MOVECOSTMULTI = 10;
+
 	public Map<String, String> speciesRegion = new HashMap<String, String>() {
 
 		private static final long serialVersionUID = 1L;
@@ -28,6 +31,8 @@ public class GameService extends DatabaseService {
 			put("bird", "city,forest");
 		}
 	};
+
+	public Map<Integer, Species> speciesInfo;
 
 	public Integer reincarnation(Integer soul) {
 		Random random = new Random();
@@ -58,7 +63,7 @@ public class GameService extends DatabaseService {
 
 	public Species getSpeice(Account account) throws Exception {
 		Integer specie = account.getSpecie();
-		Species species = this.get(Species.class, specie.longValue());
+		Species species = this.getSpeciesInfo().get(specie);
 		return species;
 	}
 
@@ -145,13 +150,14 @@ public class GameService extends DatabaseService {
 
 	}
 
-	public RegionTree getRegionTree(Species species, Account account) {
+	public RegionTree getRegionTree(Species species, Account account,
+			RequestContext context) {
 
 		String sql = "select * from region";
 		List<Region> rList = this.getJdbcTemplate().query(sql,
 				new BeanPropertyRowMapper<Region>(Region.class));
 
-		RegionTree rTree = new RegionTree();
+		RegionTree rTree = new RegionTree(context);
 
 		for (Region r : rList) {
 			if (species != null) {
@@ -173,26 +179,96 @@ public class GameService extends DatabaseService {
 	public void setAbleBySpecies(Region r, Species s) {
 		if (r.getType() != null) {
 			if (speciesRegion.get(s.getName()).contains(r.getType())) {
-				r.setAble(true);
+				r.getState().setDisabled(false);
 			} else {
-				r.setAble(false);
+				r.getState().setDisabled(true);
 			}
 		}
 	}
 
-	public RegionInfo getRegionInfo(Account account, Integer regionId) {
+	public RegionInfo getRegionInfo(Account account, Integer regionId,
+			RequestContext context) {
+
 		RegionInfo ri = new RegionInfo();
 
-		RegionTree rTree = this.getRegionTree(null, account);
+		RegionTree rTree = this.getRegionTree(null, account, null);
 
-		Integer cost = rTree.getDistance(account.getRegion(), regionId);
+		Integer cost = rTree.getDistance(account.getRegion(), regionId)
+				* MOVECOSTMULTI;
 
 		if (cost < 0) {
 			return null;
+		} else {
+			List<Account> accountList = this.gets(Account.class,
+					"select * from account where region=?",
+					new Integer[] { regionId });
+
+			if (accountList != null) {
+				for (Account a : accountList) {
+					String key = context.getMessage(getSpeciesInfo().get(
+							a.getSpecie()).getName());
+					Integer num = 1;
+					if (ri.getMemberIn().get(key) != null) {
+						num = ri.getMemberIn().get(key) + 1;
+					}
+					ri.getMemberIn().put(key, num);
+				}
+			}
 		}
 
 		ri.setCost(cost);
 
 		return ri;
+	}
+
+	public String regionMove(Account account, Integer regionId)
+			throws Exception {
+
+		Species species = this.getSpeice(account);
+
+		RegionTree rTree = this.getRegionTree(species, account, null);
+
+		Region region = rTree.getRegionById(regionId);
+
+		if (regionId.intValue() == account.getRegion().intValue()
+				|| region == null || region.getType() == null) {
+			return "regioninfoerror";
+		}
+		if (region.getState().isDisabled()) {
+			return "regionforbid";
+		}
+
+		Integer cost = rTree.getDistance(account.getRegion(), regionId)
+				* MOVECOSTMULTI;
+
+		if (cost > account.getSoul()) {
+			return "notenoughsoul";
+		}
+
+		account.setRegion(regionId);
+		account.setSoul(account.getSoul() - cost);
+
+		this.merge(account);
+
+		return "";
+	}
+
+	public Map<Integer, Species> getSpeciesInfo() {
+
+		if (speciesInfo == null) {
+
+			speciesInfo = new HashMap<Integer, Species>();
+
+			List<Species> speciesList = gets(Species.class);
+			for (Species s : speciesList) {
+				speciesInfo.put(s.getId().intValue(), s);
+			}
+		}
+
+		return speciesInfo;
+	}
+
+	public void setSpeciesInfo(Map<Integer, Species> speciesInfo) {
+		this.speciesInfo = speciesInfo;
 	}
 }

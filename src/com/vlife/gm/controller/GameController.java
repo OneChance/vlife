@@ -168,7 +168,8 @@ public class GameController {
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
-		RegionTree rTree = gameService.getRegionTree(species, account);
+		RegionTree rTree = gameService.getRegionTree(species, account,
+				Message.getContext(request));
 
 		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
 
@@ -196,7 +197,7 @@ public class GameController {
 		if (regionId != null && !regionId.equals("")) {
 			Account account = accountService.getLoginAccount(request);
 			RegionInfo ri = gameService.getRegionInfo(account,
-					Integer.parseInt(regionId));
+					Integer.parseInt(regionId), Message.getContext(request));
 
 			if (ri == null) {
 				jt.setMessage(Message.getMessage(request, "regioninfoerror"));
@@ -206,6 +207,59 @@ public class GameController {
 		}
 
 		return jt;
+	}
+
+	@RequestMapping("regionMove")
+	public JsonTool regionMove(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		JsonTool jt = JsonTool.getJson("");
+
+		String regionId = request.getParameter("regionId");
+
+		if (regionId != null && !regionId.equals("")) {
+			Account account = accountService.getLoginAccount(request);
+
+			String res = gameService.regionMove(account,
+					Integer.parseInt(regionId));
+
+			if (!res.equals("")) {
+				jt.setMessage(Message.getMessage(request, res));
+			}
+		}
+
+		return jt;
+	}
+
+	@RequestMapping("action")
+	public String action(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		return "action";
+	}
+
+	@RequestMapping("myaction")
+	public String myaction(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+
+		request.setAttribute("account", account);
+		request.setAttribute("species", species);
+
+		return "myaction";
+	}
+
+	@RequestMapping("othersaction")
+	public String othersaction(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		Account account = accountService.getLoginAccount(request);
+
+		request.setAttribute("account", account);
+
+		return "othersaction";
 	}
 
 	@Resource

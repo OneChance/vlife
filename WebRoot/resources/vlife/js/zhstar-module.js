@@ -6,7 +6,7 @@
 	
 	window.UTIL = UTIL;
 	
-	UTIL.ajax.go = function(url,goType,data,success){
+	UTIL.ajax.go = function(url,goType,data,success,error){
 		$.ajax({
             url: url,
             type: goType,
@@ -14,9 +14,12 @@
             cache: false,
             dataType:"json",
             success:success,
-            error: function() {         	
+            error: function() {
             	VLIFE.game.showMsg(server_error_msg);
-            },
+            	if(error){
+            		(error)();
+            	}       	
+            }
         });
 	}
 	

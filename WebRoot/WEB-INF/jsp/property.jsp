@@ -49,22 +49,29 @@
 		});
 
 		function cal(addO, addValue, wrapper, baseValue) {
+
 			var sumSoul = parseInt($("soul").html());
-			var addN = Math.max(addO + addValue, 0 - baseValue);
+			var addN = Math.max(addO + Math.min(addValue,sumSoul), 0 - baseValue);
 			var changeValue = addN - addO;
 			wrapper.html('+' + (addN + baseValue));
 			$("soul").html(sumSoul - changeValue);
+
 			return addN;
 		}
 
 		$("#changeproperty").click(function() {
-			VLIFE.game.changeProp({
-				addPow : addPow,
-				addDef : addDef,
-				addDex : addDex,
-				addInt : addInte,
-				addHp : addHp
-			}, addCallback);
+			
+			if(addPow==0&&addDef==0&&addDex==0&&addInte==0&&addHp==0){
+				VLIFE.game.showMsg("<spring:message code='propertynotchange'/>","warning");
+			}else{
+				VLIFE.game.changeProp({
+					addPow : addPow,
+					addDef : addDef,
+					addDex : addDex,
+					addInt : addInte,
+					addHp : addHp
+				}, addCallback);
+			}
 		});
 
 		function addCallback(res) {
