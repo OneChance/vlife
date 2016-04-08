@@ -76,6 +76,10 @@ $(function() {
     	UTIL.ajax.go(baseUrl+'changeprop',"POST",propData,callbackFunc);
     }
     
+    VLIFE.game.confirm = function(msg,confirmFunc){
+    	VLIFE.game.showMsg(msg,"warning",false,"","",true,"",confirmFunc);
+    }
+    
     VLIFE.game.showMsg = function(msg,type,moreInfo,moreText,infoContent,button,confirmText,confirmFunc,cancelText,cancelFunc){
     	
     	if($('#global_msg')){
@@ -86,28 +90,45 @@ $(function() {
     		type = 'danger';
     	}
     	
-    	var content = "<div class='alert alert-"+type+"' id='global_msg' style='z-index:3000;position:fixed; top:10px;left:10px;display:none'><button type='button' class='close info_cancel' data-dismiss='alert'>&times;</button>"+
+    	var content = "<div class='alert alert-"+type+"-border' id='global_msg' style='z-index:3000;position:fixed; top:10px;left:10px;display:none'><button type='button' class='close info_cancel' data-dismiss='alert'>&times;</button>"+
 		  "<strong>"+msg+"</strong>";
     	
     	if(moreInfo){
+    		
+    		$(".global_overlay").show();
+    		
     		content = content + "<a href='javacript:void(0);' onclick='show_info_detail();' style='margin-left:10px;'>"+moreText+"</a><p><div class='info-container' style='display:none' id='info_detail'>"+infoContent+"</div>";
     	}
     	
     	if(button){
+    		
+    		$(".global_overlay").show();
+    		
+    		if(!confirmText){
+    			confirmText = op_confirm;
+    		}
+    		
+    		if(!cancelText){
+    			cancelText = op_cancel;
+    		}
+    		
     		content = content +　"<p><div style='padding-top:8px;text-align: center;'>" +
-    							 "<button type='button' class='btn btn-success btn-sm info_confirm'><i class='fa fa-edit'></i>"+confirmText+"&nbsp;&nbsp;"+
-    							 "<button type='button' class='btn btn-warning btn-sm info_cancel' style='margin-left:5px;'><i class='fa fa-edit'></i>"+cancelText+"</div>";
+    							 "<button type='button' class='btn btn-success btn-sm info_confirm'><i class='fa fa-check'></i>"+confirmText+"&nbsp;&nbsp;"+
+    							 "<button type='button' class='btn btn-danger btn-sm info_cancel' style='margin-left:5px;'><i class='fa fa-remove'></i>"+cancelText+"</div>";
     	}
     	
     	content = content + "</div>";
 
     	$('#page-top').append(content);
     	
-    	$(".info_confirm").bind("click",confirmFunc);
+    	$(".info_confirm").bind("click",confirmFunc).click(function(){
+    		$(".global_overlay").hide();
+    	});
     	$(".info_cancel").bind("click",cancelFunc).click(function(){
     		$('#global_msg').fadeOut();
+    		$(".global_overlay").hide();
     	});
-    	
+
     	$('#global_msg').fadeIn('slow',function(){
     		
     		if(!moreInfo && !button){
@@ -116,8 +137,7 @@ $(function() {
         				$('#global_msg').fadeOut();
         			}	
         	    }, 1000);
-    		}
-    		
+    		}  		
     	});
     }
     
@@ -127,6 +147,10 @@ $(function() {
     
     VLIFE.game.regionMove = function(regionId,callbackFunc,errorFunc){
     	UTIL.ajax.go(baseUrl+'regionMove',"POST",{regionId:regionId},callbackFunc,errorFunc);
+    }
+    
+    VLIFE.game.actionExe = function(species,code,callbackFunc){
+    	UTIL.ajax.go(baseUrl+species+'/'+code,"POST",{},callbackFunc);
     }
 });
 

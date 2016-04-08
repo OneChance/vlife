@@ -23,9 +23,8 @@
 															VLIFE.game.showMsg(res.message);
 														} else {
 															
-															var moveCostNoti = "<spring:message code='movecost' arguments='"+res.data.cost+"'/>";
+															var moveCostNoti = "<spring:message code='movecost' arguments='"+res.data.vigorCost+","+res.data.satietyCost+"'/>";
 															var confirmText = "<spring:message code='move'/>";
-															var cancelText = "<spring:message code='cancel'/>";
 															
 															if(res.data.cost==0 && '${account.region}'!='0'){
 																moveCostNoti = "<spring:message code='currentregion'/>";
@@ -61,7 +60,7 @@
 																},function(){
 																	unSelectNode(node);
 																})
-															},cancelText,function(){
+															},"",function(){
 																unSelectNode(node);
 															});								
 														}

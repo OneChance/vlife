@@ -51,7 +51,8 @@
 		function cal(addO, addValue, wrapper, baseValue) {
 
 			var sumSoul = parseInt($("soul").html());
-			var addN = Math.max(addO + Math.min(addValue,sumSoul), 0 - baseValue);
+			var addN = Math.max(addO + Math.min(addValue, sumSoul),
+					0 - baseValue);
 			var changeValue = addN - addO;
 			wrapper.html('+' + (addN + baseValue));
 			$("soul").html(sumSoul - changeValue);
@@ -59,26 +60,30 @@
 			return addN;
 		}
 
-		$("#changeproperty").click(function() {
-			
-			if(addPow==0&&addDef==0&&addDex==0&&addInte==0&&addHp==0){
-				VLIFE.game.showMsg("<spring:message code='propertynotchange'/>","warning");
-			}else{
-				VLIFE.game.changeProp({
-					addPow : addPow,
-					addDef : addDef,
-					addDex : addDex,
-					addInt : addInte,
-					addHp : addHp
-				}, addCallback);
-			}
-		});
+		$("#changeproperty").click(
+				function() {
+
+					if (addPow == 0 && addDef == 0 && addDex == 0
+							&& addInte == 0 && addHp == 0) {
+						VLIFE.game.showMsg(
+								"<spring:message code='propertynotchange'/>",
+								"warning");
+					} else {
+						VLIFE.game.changeProp({
+							addPow : addPow,
+							addDef : addDef,
+							addDex : addDex,
+							addInt : addInte,
+							addHp : addHp
+						}, addCallback);
+					}
+				});
 
 		function addCallback(res) {
 			if (res.message) {
 				VLIFE.game.showMsg(res.message);
 			} else {
-				VLIFE.game.showMsg("<spring:message code='propertychanged'/>");
+				VLIFE.game.showMsg("<spring:message code='propertychanged'/>","info");
 				$("#property").load(baseUrl + "/property");
 			}
 		}
@@ -122,6 +127,30 @@
 						<spring:message code="exp" />
 						:${account.exp}
 					</p>
+	
+					<div class="progress property-prograss">
+						<div class="process-font"><i class="fa fa-heart"/>${account.hp}/${account.addHp+species.baseHp}</div>
+						<div class="progress-bar progress-bar-danger" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: ${hpPercent}%;">							
+						</div>
+					</div>
+					
+					<div class="progress property-prograss">
+						<div class="process-font"><i class="fa fa-bed"/>${account.vigor}/100</div>
+						<div class="progress-bar progress-bar-success" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: ${vigorPercent}%;">							
+						</div>
+					</div>
+					
+					<div class="progress property-prograss">
+						<div class="process-font"><i class="fa fa-cutlery"/>${account.satiety}/100</div>
+						<div class="progress-bar progress-bar-warning" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: ${satietyPercent}%;">							
+						</div>
+					</div>
 
 					<table class="table table-striped property-table">
 						<tbody>

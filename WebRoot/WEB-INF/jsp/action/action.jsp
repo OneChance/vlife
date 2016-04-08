@@ -2,8 +2,8 @@
 
 <script>
 	$(function() {
-		$(".nav-tabs").find("a").click(function() {
-			$("#"+$(this).attr("id")+"_content").load('${env.baseUrl}'+$(this).attr("id").split("_")[0]);
+		$(".nav-pills").find("a").click(function() {
+			$("#"+$(this).attr("id")+"_content").load('${env.baseUrl}${species.name}/'+$(this).attr("id").split("_")[0]);
 		});
 		
 		$("#myaction_tab").click();
@@ -25,24 +25,20 @@
 					</h2>
 					<hr class="star-primary">
 
-					<ul class="nav nav-tabs">
+					<ul class="nav nav-pills">
 						<li>
-							<a href="#myaction_tab_content" data-toggle="tab" id="myaction_tab"><spring:message
+							<a href="#myaction_tab_content" data-toggle="pill" id="myaction_tab"><spring:message
 									code="myaction" /> </a>
 						</li>
 						<li>
-							<a href="#othersaction_tab_content" data-toggle="tab" id="othersaction_tab"><spring:message
+							<a href="#othersaction_tab_content" data-toggle="pill" id="othersaction_tab"><spring:message
 									code="othersaction" /> </a>
 						</li>
 					</ul>
 
 					<div id="tab_content" class="tab-content">
-						<div class="tab-pane fade" id="myaction_tab_content">
-							
-						</div>
-						<div class="tab-pane fade" id="othersaction_tab_content">
-							
-						</div>
+						<div class="tab-pane fade" id="myaction_tab_content"></div>
+						<div class="tab-pane fade" id="othersaction_tab_content"></div>
 					</div>
 				</div>
 			</div>

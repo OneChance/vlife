@@ -21,6 +21,8 @@ public class Species {
 	private Integer soul;
 	private Integer ratioStart;
 	private Integer ratioEnd;
+	private String actions;
+	private Integer sleepTime;
 
 	public Long getId() {
 		return id;
@@ -109,4 +111,21 @@ public class Species {
 	public void setRatioEnd(Integer ratioEnd) {
 		this.ratioEnd = ratioEnd;
 	}
+
+	public String getActions() {
+		return actions;
+	}
+
+	public void setActions(String actions) {
+		this.actions = actions;
+	}
+
+	public Integer getSleepTime() {
+		return sleepTime;
+	}
+
+	public void setSleepTime(Integer sleepTime) {
+		this.sleepTime = sleepTime;
+	}
+
 }

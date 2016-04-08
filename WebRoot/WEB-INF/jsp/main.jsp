@@ -39,10 +39,13 @@
 			href="${env.resourcesUrl}/treeview/css/bootstrap-treeview.css">	
 
 		<script>
-	var server_error_msg = '<spring:message code='servererror' />';
-	var baseUrl = '${env.baseUrl}'
-	var remainTime = '${remainTime}';
-</script>
+			var server_error_msg = "<spring:message code='servererror' />";
+			var baseUrl = "${env.baseUrl}"
+			var remainTime = "${remainTime}";
+			var op_confirm_msg = "<spring:message code='op_confirm_msg' />";
+			var op_cancel = "<spring:message code='op_cancel' />";
+			var op_confirm = "<spring:message code='op_confirm' />";
+		</script>
 	</head>
 
 	<body id="page-top" class="index">
@@ -176,7 +179,7 @@
 								class="img-responsive" alt=""> </a>
 					</div>
 					<div class="col-sm-4 portfolio-item">
-						<a href="#action" class="portfolio-link game-page" url="action"
+						<a href="#action" class="portfolio-link game-page" url="${species.name}/action"
 							data-toggle="modal">
 							<div class="caption">
 								<div class="caption-content">
@@ -374,6 +377,7 @@
 		<div class="portfolio-modal modal fade" id="action"
 			tabindex="-1" role="dialog" aria-hidden="true">
 		</div>
+		<div class='global_overlay'></div>
 
 		<!-- jQuery Version 1.11.0 -->
 		<script src="${env.resourcesUrl}/vlife/js/jquery-1.11.0.js"></script>

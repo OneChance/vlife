@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
-import com.vlife.gm.services.GameService;
+import com.vlife.gm.service.GameService;
 
 @Service
 public class AccountService extends DatabaseService {
@@ -64,7 +64,7 @@ public class AccountService extends DatabaseService {
 
 		if (account_db == null) {
 			return "accounterror";
-		}else{
+		} else {
 			account.setId(account_db.getId());
 		}
 
@@ -79,6 +79,7 @@ public class AccountService extends DatabaseService {
 
 	public Account getLoginAccount(HttpServletRequest request)
 			throws NumberFormatException, Exception {
+
 		Account account = (Account) request.getSession().getAttribute(
 				"loginAccount");
 

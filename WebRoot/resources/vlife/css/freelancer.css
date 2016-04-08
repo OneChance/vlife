@@ -5,7 +5,7 @@
  */
 body {
 	overflow-x: hidden;
-	-webkit-user-select:none;
+	-webkit-user-select: none;
 }
 
 p {
@@ -296,49 +296,73 @@ section.success {
 .floating-label-form-group
 
 
+
+
 :
+
+
 
 
 :not
 
+
  
+
 
 (
 :first-child
 
+
  
+
 
 )
 {
 padding-left
 
 
+
+
 :
+
 
  
 
+
 14
 px
+
+
 
 
 ;
 border-left
 
 
+
+
 :
 
+
  
+
 
 1
 px
 
+
  
+
 
 solid
 
+
  
 
+
 #eee
+
+
 
 
 ;
@@ -497,12 +521,115 @@ footer .footer-below {
 	padding: 1px 6px 1px 6px;
 }
 
-addp{
+addp {
 	font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color:green;
+	color: green;
 	font-weight: bold;
 }
 
-.info-container{
+.info-container {
 	padding-top: 8px;
+}
+
+.property-prograss {
+	height: 30px;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+	background-color: #E2E4E4;
+}
+
+.process-font {
+	position: absolute;
+	color: #fff;
+	width: 50%;
+	text-align: center;
+	margin-top: 5px;
+}
+
+.normal-table {
+	margin-top: 10px;
+}
+
+.normal-table th {
+	text-align: center;
+}
+
+/* warning-border */
+.alert-warning-border {
+	background-color: #fff;
+	border-color: #f39c12;
+	color: #f39c12;
+}
+.alert-warning-border hr {
+  border-top-color: #f39c12;
+}
+.alert-warning-border a {
+  color: #f39c12;
+}
+.alert-warning-border .close {
+  color: #f39c12;
+}
+
+/* danger-border */
+.alert-danger-border {
+	background-color: #fff;
+	border-color: #e74c3c;
+	color: #e74c3c;
+}
+.alert-danger-border hr {
+  border-top-color: #e74c3c;
+}
+.alert-danger-border a {
+  color: #e74c3c;
+}
+.alert-danger-border .close {
+  color: #e74c3c;
+}
+
+/* info-border */
+.alert-info-border {
+	background-color: #fff;
+	border-color: #3498db;
+	color: #3498db;
+}
+.alert-info-border hr {
+  border-top-color: #3498db;
+}
+.alert-info-border a {
+  color: #3498db;
+}
+.alert-info-border .close {
+  color: #3498db;
+}
+
+/* success-border */
+.alert-success-border {
+	background-color: #fff;
+	border-color: #18bc9c;
+	color: #18bc9c;
+}
+.alert-success-border hr {
+  border-top-color: #18bc9c;
+}
+.alert-success-border a {
+  color: #18bc9c;
+}
+.alert-success-border .close {
+  color: #18bc9c;
+}
+
+.global_overlay {
+	display: none;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 3000;
+	-moz-opacity: 0.8;
+	opacity: .20;
+	filter: alpha(opacity = 20);
 }

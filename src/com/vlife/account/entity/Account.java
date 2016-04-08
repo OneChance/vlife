@@ -31,6 +31,9 @@ public class Account {
 	private Integer level;
 	private Integer exp;
 	private Integer region;
+	private Integer satiety;
+	private Integer vigor;
+	private Integer hp;
 
 	public Account() {
 		this.specie = 0;
@@ -43,6 +46,8 @@ public class Account {
 		this.level = 0;
 		this.exp = 0;
 		this.region = 0;
+		this.satiety = 100;
+		this.vigor = 100;
 	}
 
 	public Long getId() {
@@ -171,6 +176,30 @@ public class Account {
 
 	public void setRegion(Integer region) {
 		this.region = region;
+	}
+
+	public Integer getSatiety() {
+		return satiety;
+	}
+
+	public void setSatiety(Integer satiety) {
+		this.satiety = satiety;
+	}
+
+	public Integer getVigor() {
+		return vigor;
+	}
+
+	public void setVigor(Integer vigor) {
+		this.vigor = vigor;
+	}
+
+	public Integer getHp() {
+		return hp;
+	}
+
+	public void setHp(Integer hp) {
+		this.hp = hp;
 	}
 
 }

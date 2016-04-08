@@ -13,7 +13,7 @@ import com.vlife.account.service.AccountService;
 import com.vlife.gm.entity.RegionInfo;
 import com.vlife.gm.entity.RegionTree;
 import com.vlife.gm.entity.Species;
-import com.vlife.gm.services.GameService;
+import com.vlife.gm.service.GameService;
 import com.vlife.tool.JsonTool;
 import com.vlife.tool.Message;
 import com.vlife.tool.WebUtil;
@@ -95,6 +95,9 @@ public class GameController {
 	public void EnterGame(HttpServletRequest request,
 			HttpServletResponse response, Account account) throws Exception {
 		WebUtil.setCookies(response, "vlife_uinfo", account.getId().toString());
+		Account accountSession = new Account();
+		accountSession.setId(account.getId());
+		request.getSession().setAttribute("loginAccount", accountSession);
 	}
 
 	@RequestMapping("reincarnateGuide")
@@ -122,6 +125,13 @@ public class GameController {
 		request.setAttribute("species", species);
 		request.setAttribute("remainTime",
 				gameService.getRemainTime(account, species));
+
+		Integer hpPercent = account.getHp() * 100
+				/ (account.getAddHp() + species.getBaseHp());
+
+		request.setAttribute("hpPercent", hpPercent);
+		request.setAttribute("vigorPercent", account.getVigor());
+		request.setAttribute("satietyPercent", account.getSatiety());
 
 		return "property";
 	}
@@ -229,37 +239,6 @@ public class GameController {
 		}
 
 		return jt;
-	}
-
-	@RequestMapping("action")
-	public String action(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		return "action";
-	}
-
-	@RequestMapping("myaction")
-	public String myaction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		Account account = accountService.getLoginAccount(request);
-		Species species = gameService.getSpeice(account);
-
-		request.setAttribute("account", account);
-		request.setAttribute("species", species);
-
-		return "myaction";
-	}
-
-	@RequestMapping("othersaction")
-	public String othersaction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		Account account = accountService.getLoginAccount(request);
-
-		request.setAttribute("account", account);
-
-		return "othersaction";
 	}
 
 	@Resource

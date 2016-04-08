@@ -4,22 +4,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegionInfo {
-	private Integer cost;
+	private Integer vigorCost;
+	private Integer satietyCost;
 	private Map<String, Integer> memberIn;
 
 	public RegionInfo() {
-		cost = 0;
+		vigorCost = 0;
+		satietyCost = 0;
 		memberIn = new HashMap<String, Integer>() {
 			private static final long serialVersionUID = 1L;
 		};
 	}
 
-	public Integer getCost() {
-		return cost;
+	public Integer getVigorCost() {
+		return vigorCost;
 	}
 
-	public void setCost(Integer cost) {
-		this.cost = cost;
+	public void setVigorCost(Integer vigorCost) {
+		this.vigorCost = vigorCost;
+	}
+
+	public Integer getSatietyCost() {
+		return satietyCost;
+	}
+
+	public void setSatietyCost(Integer satietyCost) {
+		this.satietyCost = satietyCost;
 	}
 
 	public Map<String, Integer> getMemberIn() {

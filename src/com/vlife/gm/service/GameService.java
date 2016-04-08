@@ -1,4 +1,4 @@
-package com.vlife.gm.services;
+package com.vlife.gm.service;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +20,8 @@ import com.vlife.gm.entity.Species;
 @Service
 public class GameService extends DatabaseService {
 
-	public static Integer MOVECOSTMULTI = 10;
+	public static Integer MOVECOSTMULTI_VIGOR = 8;
+	public static Integer MOVECOSTMULTI_SATITEY = 4;
 
 	public Map<String, String> speciesRegion = new HashMap<String, String>() {
 
@@ -58,7 +59,11 @@ public class GameService extends DatabaseService {
 		account.setSpecie(specie);
 		account.setLevel(1);
 		account.setExp(0);
-		account.setReincarnateTime(new Date());
+		Date bornDate = new Date();
+		account.setReincarnateTime(bornDate);
+		account.setVigor(100);
+		account.setSatiety(100);
+		account.setHp(speciesInfo.get(specie).getBaseHp());
 	}
 
 	public Species getSpeice(Account account) throws Exception {
@@ -141,6 +146,9 @@ public class GameService extends DatabaseService {
 		account.setSoul(account.getSoul()
 				- (addPow + addDef + addDex + addInt + addHp));
 
+		account.setHp(Math.min(account.getHp(),
+				account.getAddHp() + species.getBaseHp()));
+
 		this.merge(account);
 
 		return "";
@@ -193,10 +201,9 @@ public class GameService extends DatabaseService {
 
 		RegionTree rTree = this.getRegionTree(null, account, null);
 
-		Integer cost = rTree.getDistance(account.getRegion(), regionId)
-				* MOVECOSTMULTI;
+		Integer moveDistance = rTree.getDistance(account.getRegion(), regionId);
 
-		if (cost < 0) {
+		if (moveDistance < 0) {
 			return null;
 		} else {
 			List<Account> accountList = this.gets(Account.class,
@@ -216,7 +223,8 @@ public class GameService extends DatabaseService {
 			}
 		}
 
-		ri.setCost(cost);
+		ri.setSatietyCost(moveDistance * MOVECOSTMULTI_SATITEY);
+		ri.setVigorCost(moveDistance * MOVECOSTMULTI_VIGOR);
 
 		return ri;
 	}
@@ -238,15 +246,21 @@ public class GameService extends DatabaseService {
 			return "regionforbid";
 		}
 
-		Integer cost = rTree.getDistance(account.getRegion(), regionId)
-				* MOVECOSTMULTI;
+		Integer moveDistance = rTree.getDistance(account.getRegion(), regionId);
 
-		if (cost > account.getSoul()) {
-			return "notenoughsoul";
+		Integer satietyCost = moveDistance * MOVECOSTMULTI_SATITEY;
+		Integer vigorCost = moveDistance * MOVECOSTMULTI_VIGOR;
+
+		if (satietyCost > account.getSatiety()) {
+			return "notenoughsatiety";
+		}
+		if (vigorCost > account.getVigor()) {
+			return "notenoughvigor";
 		}
 
+		account.setSatiety(account.getSatiety() - satietyCost);
+		account.setVigor(account.getVigor() - vigorCost);
 		account.setRegion(regionId);
-		account.setSoul(account.getSoul() - cost);
 
 		this.merge(account);
 
