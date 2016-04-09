@@ -22,6 +22,7 @@ public class Action {
 	private Long target;
 	private Date stopTime;
 	private Integer status;
+	private String detail;
 
 	public Long getId() {
 		return id;
@@ -87,4 +88,12 @@ public class Action {
 		this.status = status;
 	}
 
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+	
 }

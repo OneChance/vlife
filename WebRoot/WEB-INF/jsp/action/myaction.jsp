@@ -19,7 +19,7 @@
 		$(".time-action").click(function(){
 			var actionCode = $(this).attr("actioncode");	
 			var codeMsg = "<spring message code='"+actionCode+"'/>";
-			
+
 			VLIFE.game.confirm(op_confirm_msg,function(){
 					VLIFE.game.actionExe('${species.name}',actionCode,function(res){
 					if(res.success){

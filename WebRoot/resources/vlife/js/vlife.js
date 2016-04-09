@@ -112,7 +112,7 @@ $(function() {
     			cancelText = op_cancel;
     		}
     		
-    		content = content +　"<p><div style='padding-top:8px;text-align: center;'>" +
+    		content = content + "<p><div style='padding-top:8px;text-align: center;'>" +
     							 "<button type='button' class='btn btn-success btn-sm info_confirm'><i class='fa fa-check'></i>"+confirmText+"&nbsp;&nbsp;"+
     							 "<button type='button' class='btn btn-danger btn-sm info_cancel' style='margin-left:5px;'><i class='fa fa-remove'></i>"+cancelText+"</div>";
     	}
@@ -152,6 +152,38 @@ $(function() {
     VLIFE.game.actionExe = function(species,code,callbackFunc){
     	UTIL.ajax.go(baseUrl+species+'/'+code,"POST",{},callbackFunc);
     }
+    
+    VLIFE.game.actionDelete = function(species,actionId,callbackFunc){
+    	UTIL.ajax.go(baseUrl+species+'/delete',"POST",{actionId:actionId},callbackFunc);
+    }
+    
+    $('.page-scroll a').bind('click', function(event) {
+        var $anchor = $(this);
+        $('html, body').stop().animate({
+            scrollTop: $($anchor.attr('href')).offset().top
+        }, 1500, 'easeInOutExpo');
+        event.preventDefault();
+    });
+    
+    $("body").on("input propertychange", ".floating-label-form-group", function(e) {
+        $(this).toggleClass("floating-label-form-group-with-value", !! $(e.target).val());
+    }).on("focus", ".floating-label-form-group", function() {
+        $(this).addClass("floating-label-form-group-with-focus");
+    }).on("blur", ".floating-label-form-group", function() {
+        $(this).removeClass("floating-label-form-group-with-focus");
+    });
+    
+    // Highlight the top nav as scrolling occurs
+    $('body').scrollspy({
+        target: '.navbar-fixed-top'
+    })
+
+    // Closes the Responsive Menu on Menu Item Click
+    $('.navbar-collapse ul li a').click(function() {
+        $('.navbar-toggle:visible').click();
+    });
+    
+    $('header').css("height",document.documentElement.clientHeight+"px");
 });
 
 

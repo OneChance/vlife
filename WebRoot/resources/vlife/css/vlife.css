@@ -518,7 +518,8 @@ footer .footer-below {
 }
 
 .property-btn {
-	padding: 1px 6px 1px 6px;
+	padding: 1px 4px 1px 6px;
+	font-size: 13px;
 }
 
 addp {
@@ -632,4 +633,8 @@ addp {
 	-moz-opacity: 0.8;
 	opacity: .20;
 	filter: alpha(opacity = 20);
+}
+
+.fa{
+	margin-right:3px;
 }

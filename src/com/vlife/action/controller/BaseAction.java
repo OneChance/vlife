@@ -36,13 +36,6 @@ public class BaseAction {
 		return "action/action";
 	}
 
-	@RequestMapping("ableaction")
-	public String ableaction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		return "action/ableaction";
-	}
-
 	@RequestMapping("myaction")
 	public String myaction(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -88,11 +81,23 @@ public class BaseAction {
 		return "action/myaction";
 	}
 
-	@RequestMapping("othersaction")
-	public String othersaction(HttpServletRequest request,
+	@RequestMapping("actionlog")
+	public String actionlog(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-
-		return "action/othersaction";
+			
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+		
+		List<Action> actionCompleted = actionService.getActionCompleted(account);
+		
+		if(actionCompleted!=null){
+			request.setAttribute("actions", actionCompleted);
+		}
+		
+		request.setAttribute("account", account);
+		request.setAttribute("species", species);
+		
+		return "action/actionlog";
 	}
 
 	@RequestMapping("sleep")
@@ -146,20 +151,57 @@ public class BaseAction {
 						(account.getAddHp() + species.getBaseHp()),
 						account.getAddHp() + hp));
 				account.setSatiety(Math.max(0, account.getSatiety() - satiety));
-
-				actionService.actionClose(running, account);
-
-				jt.setMessage(Message.getMessage(request, "actionearn") + ":"
+				
+				
+				String detail = Message.getMessage(request, "actionearn") + ":"
 						+ vigor + Message.getMessage(request, "vigor") + ","
 						+ hp + Message.getMessage(request, "hp") + "."
 						+ Message.getMessage(request, "actioncost") + ":"
 						+ satiety + Message.getMessage(request, "satiety")
-						+ ".");
+						+ ".";
+
+				System.out.println(detail+"---------------");
+				
+				running.setDetail(detail);
+				actionService.actionClose(running, account);
+
+				jt.setMessage(detail);
 
 			} else {
 				jt.setMessage(Message.getMessage(request, "actionrunning"));
 				jt.setSuccess(false);
 			}
+		}
+
+		return jt;
+	}
+	
+	@RequestMapping("delete")
+	public JsonTool delete(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		JsonTool jt = JsonTool.getJson("");
+		boolean success = false;
+		
+		String actionId = request.getParameter("actionId");
+		
+		if(actionId!=null && !actionId.equals("")){
+			Account account = accountService.getLoginAccount(request);
+			Action action = actionService.getAction(Long.parseLong(actionId));
+			
+			if(action!=null && action.getAccount().longValue()==account.getId().longValue()){
+				
+				actionService.deleteAction(action);
+				
+				success = true;
+			}			
+		}
+		
+		if(!success){
+			jt.setSuccess(false);
+			jt.setMessage(Message.getMessage(request, "action_info_error"));
+		}else{
+			jt.setMessage(Message.getMessage(request, "action_deleted"));
 		}
 
 		return jt;

@@ -3,7 +3,7 @@
 <script>
 	$(function() {
 		$(".nav-pills").find("a").click(function() {
-			$("#"+$(this).attr("id")+"_content").load('${env.baseUrl}${species.name}/'+$(this).attr("id").split("_")[0]);
+			$("#"+$(this).attr("id")+"_content").load('${env.baseUrl}'+$(this).attr("id").split("_")[0]);
 		});
 		
 		$("#myaction_tab").click();
@@ -31,14 +31,14 @@
 									code="myaction" /> </a>
 						</li>
 						<li>
-							<a href="#othersaction_tab_content" data-toggle="pill" id="othersaction_tab"><spring:message
-									code="othersaction" /> </a>
+							<a href="#actionlog_tab_content" data-toggle="pill" id="actionlog_tab"><spring:message
+									code="actionlog" /> </a>
 						</li>
 					</ul>
 
 					<div id="tab_content" class="tab-content">
 						<div class="tab-pane fade" id="myaction_tab_content"></div>
-						<div class="tab-pane fade" id="othersaction_tab_content"></div>
+						<div class="tab-pane fade" id="actionlog_tab_content"></div>
 					</div>
 				</div>
 			</div>

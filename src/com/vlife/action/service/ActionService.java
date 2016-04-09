@@ -43,4 +43,19 @@ public class ActionService extends DatabaseService {
 		this.merge(action);
 		this.merge(account);
 	}
+	
+	public List<Action> getActionCompleted(Account account){
+		String sql = "select * from action where account=? and status=?";
+		return this.gets(Action.class, sql, new Long[] { account.getId(), 1l });
+	}
+	
+	public Action getAction(Long actionId) throws Exception{
+		String sql = "select * from action where id=?";
+		return this.get(Action.class, sql, new Long[] { actionId});
+	}
+	
+	public void deleteAction(Action action) throws Exception{
+		action.setStatus(2);
+		this.merge(action);
+	}
 }
