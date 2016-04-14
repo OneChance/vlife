@@ -1,5 +1,6 @@
 package com.vlife.gm.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.RequestContext;
 
 import com.vlife.account.entity.Account;
 import com.vlife.database.service.DatabaseService;
+import com.vlife.gm.entity.Inventory;
 import com.vlife.gm.entity.Region;
 import com.vlife.gm.entity.RegionInfo;
 import com.vlife.gm.entity.RegionTree;
@@ -284,5 +286,23 @@ public class GameService extends DatabaseService {
 
 	public void setSpeciesInfo(Map<Integer, Species> speciesInfo) {
 		this.speciesInfo = speciesInfo;
+	}
+
+	public List<Inventory> getInventoryByAccount(Account account) {
+		String sql = "select * from inventory where account=?";
+		List<Inventory> inventoryList = this.gets(Inventory.class, sql,
+				new Long[] { account.getId() });
+		if (inventoryList == null) {
+			inventoryList = new ArrayList<Inventory>();
+		}
+		return inventoryList;
+	}
+
+	public void setInventoryDetail(Inventory inventory) {
+		if (inventory.getType().equals("material")) {
+
+		} else if (inventory.getType().equals("food")) {
+
+		}
 	}
 }

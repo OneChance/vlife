@@ -62,6 +62,10 @@
 			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
+	<aop:config expose-proxy="true">
+		<aop:pointcut id="txPointcut" expression="execution(* com.vlife..service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
+	</aop:config>
 
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">

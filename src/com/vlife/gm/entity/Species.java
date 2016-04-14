@@ -23,6 +23,11 @@ public class Species {
 	private Integer ratioEnd;
 	private String actions;
 	private Integer sleepTime;
+	private Integer forageTime;
+	private String foods;
+	private Integer hpRecover;
+	private Integer vigorRecover;
+	private Integer satietyRecover;
 
 	public Long getId() {
 		return id;
@@ -126,6 +131,46 @@ public class Species {
 
 	public void setSleepTime(Integer sleepTime) {
 		this.sleepTime = sleepTime;
+	}
+
+	public Integer getForageTime() {
+		return forageTime;
+	}
+
+	public void setForageTime(Integer forageTime) {
+		this.forageTime = forageTime;
+	}
+
+	public String getFoods() {
+		return foods;
+	}
+
+	public void setFoods(String foods) {
+		this.foods = foods;
+	}
+
+	public Integer getHpRecover() {
+		return hpRecover;
+	}
+
+	public void setHpRecover(Integer hpRecover) {
+		this.hpRecover = hpRecover;
+	}
+
+	public Integer getVigorRecover() {
+		return vigorRecover;
+	}
+
+	public void setVigorRecover(Integer vigorRecover) {
+		this.vigorRecover = vigorRecover;
+	}
+
+	public Integer getSatietyRecover() {
+		return satietyRecover;
+	}
+
+	public void setSatietyRecover(Integer satietyRecover) {
+		this.satietyRecover = satietyRecover;
 	}
 
 }

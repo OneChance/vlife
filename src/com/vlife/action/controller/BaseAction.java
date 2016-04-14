@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vlife.account.entity.Account;
 import com.vlife.account.service.AccountService;
+import com.vlife.action.actions.ActionClose;
+import com.vlife.action.actions.ActionForage;
+import com.vlife.action.actions.ActionSleep;
 import com.vlife.action.entity.Action;
 import com.vlife.action.entity.ActionInfo;
 import com.vlife.action.service.ActionService;
@@ -24,10 +27,6 @@ import com.vlife.tool.Message;
 
 @Controller
 public class BaseAction {
-
-	public static int FULL_SLEEP_HUNGER = 20;
-	public static int FULL_SLEEP_VIGOR = 80;
-	public static float FULL_SLEEP_HP = 0.3f;
 
 	@RequestMapping("action")
 	public String action(HttpServletRequest request,
@@ -84,42 +83,61 @@ public class BaseAction {
 	@RequestMapping("actionlog")
 	public String actionlog(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-			
+
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
-		
-		List<Action> actionCompleted = actionService.getActionCompleted(account);
-		
-		if(actionCompleted!=null){
+
+		List<Action> actionCompleted = actionService
+				.getActionCompleted(account);
+
+		if (actionCompleted != null) {
 			request.setAttribute("actions", actionCompleted);
 		}
-		
+
 		request.setAttribute("account", account);
 		request.setAttribute("species", species);
-		
+
 		return "action/actionlog";
 	}
 
 	@RequestMapping("sleep")
 	public JsonTool sleep(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+		Integer duration = species.getSleepTime();
+		ActionSleep sleep = new ActionSleep();
+		return durationActionExe(request, "sleep", duration, account, sleep);
+	}
+
+	@RequestMapping("forage")
+	public JsonTool forage(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Account account = accountService.getLoginAccount(request);
+		Species species = gameService.getSpeice(account);
+		Integer duration = species.getForageTime();
+		ActionForage forage = new ActionForage();
+		return durationActionExe(request, "forage", duration, account, forage);
+	}
+
+	public JsonTool durationActionExe(HttpServletRequest request,
+			String actionCode, Integer duration, Account account,
+			ActionClose actionClose) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 
-		Account account = accountService.getLoginAccount(request);
-		Species species = gameService.getSpeice(account);
 		Action running = actionService.getRunAction(account);
 
 		if (running == null) {
 
 			Action action = new Action();
 			action.setAccount(account.getId());
-			action.setCode("sleep");
+			action.setCode(actionCode);
 
 			Calendar c = Calendar.getInstance();
 			Date now = new Date();
 			c.setTime(now);
-			c.add(Calendar.HOUR, species.getSleepTime());
+			c.add(Calendar.MINUTE, duration);
 			Date end = c.getTime();
 
 			action.setStartTime(now);
@@ -132,40 +150,17 @@ public class BaseAction {
 					+ Message.getMessage(request, "action_" + action.getCode()));
 
 		} else {
-			if (running.getCode() != null && running.getCode().equals("sleep")) {
+			if (running.getCode() != null
+					&& running.getCode().equals(actionCode)) {
 
-				Integer sleepHours = Math.min(species.getSleepTime(),
-						(int) (new Date().getTime() - running.getStartTime()
-								.getTime()) / (1000 * 60 * 60));
+				actionClose.setRunning(running);
+				actionClose.setContext(Message.getContext(request));
+				actionClose.setGameService(gameService);
+				actionClose.setAccount(account);
 
-				Integer vigor = sleepHours * FULL_SLEEP_VIGOR
-						/ species.getSleepTime();
-				Integer hp = (int) (sleepHours * FULL_SLEEP_HP
-						* (account.getAddHp() + species.getBaseHp()) / species
-						.getSleepTime());
-				Integer satiety = sleepHours * FULL_SLEEP_HUNGER
-						/ species.getSleepTime();
+				actionService.actionClose(actionClose);
 
-				account.setVigor(Math.min(100, account.getVigor() + vigor));
-				account.setHp(Math.min(
-						(account.getAddHp() + species.getBaseHp()),
-						account.getAddHp() + hp));
-				account.setSatiety(Math.max(0, account.getSatiety() - satiety));
-				
-				
-				String detail = Message.getMessage(request, "actionearn") + ":"
-						+ vigor + Message.getMessage(request, "vigor") + ","
-						+ hp + Message.getMessage(request, "hp") + "."
-						+ Message.getMessage(request, "actioncost") + ":"
-						+ satiety + Message.getMessage(request, "satiety")
-						+ ".";
-
-				System.out.println(detail+"---------------");
-				
-				running.setDetail(detail);
-				actionService.actionClose(running, account);
-
-				jt.setMessage(detail);
+				jt.setMessage(running.getDetail());
 
 			} else {
 				jt.setMessage(Message.getMessage(request, "actionrunning"));
@@ -175,32 +170,34 @@ public class BaseAction {
 
 		return jt;
 	}
-	
+
 	@RequestMapping("delete")
 	public JsonTool delete(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 		boolean success = false;
-		
+
 		String actionId = request.getParameter("actionId");
-		
-		if(actionId!=null && !actionId.equals("")){
+
+		if (actionId != null && !actionId.equals("")) {
 			Account account = accountService.getLoginAccount(request);
 			Action action = actionService.getAction(Long.parseLong(actionId));
-			
-			if(action!=null && action.getAccount().longValue()==account.getId().longValue()){
-				
+
+			if (action != null
+					&& action.getAccount().longValue() == account.getId()
+							.longValue()) {
+
 				actionService.deleteAction(action);
-				
+
 				success = true;
-			}			
+			}
 		}
-		
-		if(!success){
+
+		if (!success) {
 			jt.setSuccess(false);
 			jt.setMessage(Message.getMessage(request, "action_info_error"));
-		}else{
+		} else {
 			jt.setMessage(Message.getMessage(request, "action_deleted"));
 		}
 
@@ -208,9 +205,9 @@ public class BaseAction {
 	}
 
 	@Resource
-	private AccountService accountService;
+	public AccountService accountService;
 	@Resource
-	private GameService gameService;
+	public GameService gameService;
 	@Resource
-	private ActionService actionService;
+	public ActionService actionService;
 }

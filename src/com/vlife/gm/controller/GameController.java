@@ -1,5 +1,7 @@
 package com.vlife.gm.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vlife.account.entity.Account;
 import com.vlife.account.service.AccountService;
+import com.vlife.gm.entity.Inventory;
 import com.vlife.gm.entity.RegionInfo;
 import com.vlife.gm.entity.RegionTree;
 import com.vlife.gm.entity.Species;
@@ -239,6 +242,24 @@ public class GameController {
 		}
 
 		return jt;
+	}
+
+	@RequestMapping("inventory")
+	public String inventory(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		Account account = accountService.getLoginAccount(request);
+
+		List<Inventory> inventoryList = gameService
+				.getInventoryByAccount(account);
+
+		for (Inventory inventory : inventoryList) {
+			gameService.setInventoryDetail(inventory);
+		}
+
+		request.setAttribute("inventoryList", inventoryList);
+
+		return "inventory";
 	}
 
 	@Resource

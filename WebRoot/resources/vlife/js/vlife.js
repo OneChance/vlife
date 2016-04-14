@@ -131,10 +131,12 @@ $(function() {
 
     	$('#global_msg').fadeIn('slow',function(){
     		
+    		var $this = $(this);
+    		
     		if(!moreInfo && !button){
     			setTimeout(function () { 
-        			if($('#global_msg').is(':visible')){
-        				$('#global_msg').fadeOut();
+        			if($this.is(':visible')){
+        				$this.fadeOut();
         			}	
         	    }, 1000);
     		}  		
