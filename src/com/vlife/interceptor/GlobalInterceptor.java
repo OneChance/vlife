@@ -28,7 +28,7 @@ public class GlobalInterceptor implements HandlerInterceptor {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-
+		
 		if (!this.isResources(handlerMethod)) {
 
 			String local = WebUtil.getCookies(request, "vlife_lan");

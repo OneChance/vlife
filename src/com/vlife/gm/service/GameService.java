@@ -104,7 +104,7 @@ public class GameService extends DatabaseService {
 
 		initAccount(account);
 
-		Species newSpecies = this.get(Species.class, account.getSpecie());
+		Species newSpecies = this.get(Species.class, account.getSpecie().longValue());
 		account.setSoul(sumSoul - newSpecies.getSoul());
 
 		assetConvert(account);

@@ -94,9 +94,7 @@ $(function() {
 		  "<strong>"+msg+"</strong>";
     	
     	if(moreInfo){
-    		
-    		$(".global_overlay").show();
-    		
+    		$(".global_overlay").show();    		
     		content = content + "<a href='javacript:void(0);' onclick='show_info_detail();' style='margin-left:10px;'>"+moreText+"</a><p><div class='info-container' style='display:none' id='info_detail'>"+infoContent+"</div>";
     	}
     	

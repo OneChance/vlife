@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.vlife.account.entity.Account;
 import com.vlife.account.service.AccountService;
 import com.vlife.gm.entity.Inventory;
@@ -26,8 +26,7 @@ import com.vlife.tool.WebUtil;
 public class GameController {
 
 	@RequestMapping("")
-	public String main(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public String main(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Account account = accountService.getLoginAccount(request);
 		boolean login = false;
@@ -49,26 +48,9 @@ public class GameController {
 		return "main";
 	}
 
-	@RequestMapping("login")
-	public JsonTool login(@ModelAttribute("account") Account account,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		JsonTool jt = JsonTool.getJson("");
-		String checkRes = accountService.checkLogin(account);
-		if (!checkRes.equals("")) {
-			jt.setMessage(Message.getMessage(request, checkRes));
-		} else {
-			EnterGame(request, response, account);
-		}
-
-		return jt;
-	}
-
 	@RequestMapping("reg")
-	public JsonTool reg(@ModelAttribute("account") Account account,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public JsonTool reg(@ModelAttribute("account") Account account, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 
@@ -85,8 +67,7 @@ public class GameController {
 	}
 
 	@RequestMapping("unsign")
-	public JsonTool unsign(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public JsonTool unsign(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 		request.getSession().setAttribute("loginAccount", null);
@@ -95,8 +76,7 @@ public class GameController {
 		return jt;
 	}
 
-	public void EnterGame(HttpServletRequest request,
-			HttpServletResponse response, Account account) throws Exception {
+	public void EnterGame(HttpServletRequest request, HttpServletResponse response, Account account) throws Exception {
 		WebUtil.setCookies(response, "vlife_uinfo", account.getId().toString());
 		Account accountSession = new Account();
 		accountSession.setId(account.getId());
@@ -104,33 +84,28 @@ public class GameController {
 	}
 
 	@RequestMapping("reincarnateGuide")
-	public String reincarnateGuide(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public String reincarnateGuide(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
-		request.setAttribute("soulget",
-				gameService.calSoulGet(account, species));
+		request.setAttribute("soulget", gameService.calSoulGet(account, species));
 		request.setAttribute("species", species);
 
 		return "reincarnate_guide";
 	}
 
 	@RequestMapping("property")
-	public String property(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public String property(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
 		request.setAttribute("account", account);
 		request.setAttribute("species", species);
-		request.setAttribute("remainTime",
-				gameService.getRemainTime(account, species));
+		request.setAttribute("remainTime", gameService.getRemainTime(account, species));
 
-		Integer hpPercent = account.getHp() * 100
-				/ (account.getAddHp() + species.getBaseHp());
+		Integer hpPercent = account.getHp() * 100 / (account.getAddHp() + species.getBaseHp());
 
 		request.setAttribute("hpPercent", hpPercent);
 		request.setAttribute("vigorPercent", account.getVigor());
@@ -140,8 +115,7 @@ public class GameController {
 	}
 
 	@RequestMapping("reincarnate")
-	public JsonTool reincarnate(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public JsonTool reincarnate(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 
@@ -157,9 +131,8 @@ public class GameController {
 	}
 
 	@RequestMapping("changeprop")
-	public JsonTool changeprop(@ModelAttribute("account") Account propAccount,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public JsonTool changeprop(@ModelAttribute("account") Account propAccount, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 
@@ -175,21 +148,18 @@ public class GameController {
 	}
 
 	@RequestMapping("region")
-	public String region(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public String region(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Account account = accountService.getLoginAccount(request);
 		Species species = gameService.getSpeice(account);
 
-		RegionTree rTree = gameService.getRegionTree(species, account,
-				Message.getContext(request));
+		RegionTree rTree = gameService.getRegionTree(species, account, Message.getContext(request));
 
 		String data = JsonTool.getJson(rTree.getRoot()).getData().toString();
 
 		data = "["
-				+ data.replaceAll("name", "text")
-						.replaceAll("subRegions", "nodes")
-						.replaceAll(",\"nodes\":\\[\\]", "") + "]";
+				+ data.replaceAll("name", "text").replaceAll("subRegions", "nodes").replaceAll(",\"nodes\":\\[\\]", "")
+				+ "]";
 
 		request.setAttribute("treeData", data);
 		request.setAttribute("account", account);
@@ -199,9 +169,8 @@ public class GameController {
 	}
 
 	@RequestMapping("regionInfo")
-	public JsonTool regionInfo(@ModelAttribute("account") Account propAccount,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public JsonTool regionInfo(@ModelAttribute("account") Account propAccount, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
 		String regionId = request.getParameter("regionId");
 
@@ -209,8 +178,7 @@ public class GameController {
 
 		if (regionId != null && !regionId.equals("")) {
 			Account account = accountService.getLoginAccount(request);
-			RegionInfo ri = gameService.getRegionInfo(account,
-					Integer.parseInt(regionId), Message.getContext(request));
+			RegionInfo ri = gameService.getRegionInfo(account, Integer.parseInt(regionId), Message.getContext(request));
 
 			if (ri == null) {
 				jt.setMessage(Message.getMessage(request, "regioninfoerror"));
@@ -223,8 +191,7 @@ public class GameController {
 	}
 
 	@RequestMapping("regionMove")
-	public JsonTool regionMove(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public JsonTool regionMove(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		JsonTool jt = JsonTool.getJson("");
 
@@ -233,8 +200,7 @@ public class GameController {
 		if (regionId != null && !regionId.equals("")) {
 			Account account = accountService.getLoginAccount(request);
 
-			String res = gameService.regionMove(account,
-					Integer.parseInt(regionId));
+			String res = gameService.regionMove(account, Integer.parseInt(regionId));
 
 			if (!res.equals("")) {
 				jt.setMessage(Message.getMessage(request, res));
@@ -245,13 +211,11 @@ public class GameController {
 	}
 
 	@RequestMapping("inventory")
-	public String inventory(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public String inventory(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Account account = accountService.getLoginAccount(request);
 
-		List<Inventory> inventoryList = gameService
-				.getInventoryByAccount(account);
+		List<Inventory> inventoryList = gameService.getInventoryByAccount(account);
 
 		for (Inventory inventory : inventoryList) {
 			gameService.setInventoryDetail(inventory);
@@ -261,6 +225,22 @@ public class GameController {
 
 		return "inventory";
 	}
+	
+	@RequestMapping("/login")
+	public JsonTool login2(@ModelAttribute("account") Account account, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		JsonTool jt = JsonTool.getJson("");
+		String checkRes = accountService.checkLogin(account);
+		if (!checkRes.equals("")) {
+			jt.setMessage(Message.getMessage(request, checkRes));
+		} else {
+			EnterGame(request, response, account);
+		}
+
+		return jt;
+	}
+	
 
 	@Resource
 	private AccountService accountService;
